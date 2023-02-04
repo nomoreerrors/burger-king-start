@@ -6,6 +6,7 @@
     mainLight: 'rgb(242, 242, 242)',
     yellow: 'rgb(237, 178, 62)',
     black: 'rgb(30, 30, 30)',
+    red: 'rgb(190, 60, 60)'
 
  }
 

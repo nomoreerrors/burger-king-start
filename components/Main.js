@@ -32,7 +32,7 @@ export default function Main ({navigation}) {
     const myRef = useRef(null)
     const value = useRef(new Animated.Value(0)).current
     const windowHeight = Dimensions.get('window').height
-   
+    
 
 
    
@@ -43,7 +43,13 @@ export default function Main ({navigation}) {
 
 
 
-    const scrollHandler = (id) =>  myRef.current.scrollToIndex({index: id}) 
+    const scrollHandler = (id) => {
+            myRef.current.scrollToIndex({index: id}) 
+
+    }
+        
+
+
     const deliveryButtonHandle = (direction) => {
                 if(direction === 'left')  
                 setDeliveryButtonTap({left: true, right: false})
@@ -51,7 +57,9 @@ export default function Main ({navigation}) {
     }
 
 
-
+    useEffect(() => {
+        console.log(data[0].selected)
+    },[data])
 
 
 
@@ -89,13 +97,13 @@ export default function Main ({navigation}) {
             
 
 
-            if(y > lastScreenPosition.current &&
-                 scrollDirection !== 'down') setScrollDirection('down')
+            // if(y > lastScreenPosition.current &&
+            //      scrollDirection !== 'down') setScrollDirection('down')
 
-            if(y < lastScreenPosition.current &&
-                 scrollDirection !== 'up') { setScrollDirection('Up') }
+            // if(y < lastScreenPosition.current &&
+            //      scrollDirection !== 'up') { setScrollDirection('Up') }
                 
-            lastScreenPosition.current = y
+            // lastScreenPosition.current = y
 
 
 
@@ -112,8 +120,7 @@ export default function Main ({navigation}) {
     
 
 
-
-
+ 
     
    
                 
@@ -131,29 +138,26 @@ export default function Main ({navigation}) {
                                               isActive={deliveryButtonHandle}
                                               
                                               />}
+
+
                     {item.id === 2 && 
-                            <Animated.View style={{
-                                
-                                    zIndex: 3,
-                                    transform: [{translateY: value.interpolate({     
-                                        inputRange: [0, styles.mainContainer.height + 60, windowHeight * 1000 ],
-                                        outputRange: [0, 0, windowHeight * 1000],
-                                        extrapolate: 'clamp'
-                                    })}]
+                            <Animated.ScrollView
+                                         horizontal={true}
+                                         style={[styles.horizontalScroll,
+                                                // {transform: [{translateY: value.interpolate({     
+                                                //     inputRange: [0, styles.mainContainer.height + 60, windowHeight * 1000 ],
+                                                //     outputRange: [0, 0, windowHeight * 1000],
+                                                //     extrapolate: 'clamp'
+                                                // })}]}
+                                   ]}>  
+                                    <MenuButtons scrollHandle={scrollHandler}/>                                 
 
-                                    }}>  
-
-
-                                        
-                                
-
-                                <MenuButtons />
-                            </Animated.View>
+                            </Animated.ScrollView>
                            
                     }
 
-                     {/* <MenuButtons /> */}
-                    {/* <View style={{width: 400, height: 100, backgroundColor:'pink'}}></View> */}
+
+
 
                     {item.header && <View><Text style={
                                                 styles.menuHeaderText}>{item.header}
@@ -213,26 +217,29 @@ export default function Main ({navigation}) {
 
 
                     <Animated.FlatList data={data}
+                                    getItemLayout={(data, index) => (
+                                        {length: 200, offset: 200 * index, index}
+                                      )}
                                     onScroll={Animated.event([{
                                                 nativeEvent: {
                                                     contentOffset: { y: value }
                                                         }}],
-                                                {listener: (event) => menuButtonsAnimation(event),useNativeDriver: true })}
+                                                {useNativeDriver: true })}
                                     ref={myRef}
                                     style={{marginBottom: 50, zIndex: 0}}
                                     keyExtractor={item => item.id}
                                     CellRendererComponent={renderItem}
-                                    stickyHeaderHiddenOnScroll={true}
-                                    stickyHeaderIndices={[0]}
+                                    stickyHeaderHiddenOnScroll={false}
+                                    stickyHeaderIndices={[0,2]}
                                     ListHeaderComponent={() => {
-                                        return  <View style={{
-                                        backgroundColor: colors.brown,
-                                        width: Dimensions.get('window').width,
-                                        }} >
-                    
-                                    <TextInput style={styles.textInput}></TextInput>
+                                                        return  <View style={{
+                                                        backgroundColor: colors.brown,
+                                                        width: Dimensions.get('window').width,
+                                                        }} >
                                     
-                                    </View> 
+                                                        <TextInput style={styles.textInput}></TextInput>
+                                                        
+                                                        </View> 
                                     
                                     }}
                                     >
@@ -359,7 +366,18 @@ const styles = StyleSheet.create({
             fontWeight: 900,
             margin: 40,
             color: colors.brown
-        }
+        },
+
+        horizontalScroll: {
+           
+            backgroundColor: colors.main,
+            paddingBottom: 10,
+            marginLeft: 5,
+            marginRight: 12,
+            zIndex: 3,
+            
+            
+        },
         
 
 })

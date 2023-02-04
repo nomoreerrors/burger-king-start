@@ -12,7 +12,9 @@ export default [
 
     {
         id: 3,
-        header: 'Новинки'
+        header: 'Новинки',
+        scrollIndex: 3,
+        selected: true,
     },
     {
         id: 4,
@@ -59,7 +61,9 @@ export default [
     },
     {
         id: 10,
-        header: 'Бургеры из говядины'
+        header: 'Бургеры из говядины',
+        scrollIndex: 8,
+        selected: false
     },
     {
         id: 11,
@@ -105,7 +109,9 @@ export default [
     },
     {
         id: 17,
-        header: 'Бургеры из курицы'
+        header: 'Бургеры из курицы',
+        scrollIndex: 14,
+        selected: false,
     },
     {
         id: 18,
