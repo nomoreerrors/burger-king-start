@@ -18,30 +18,11 @@ export default function Main ({navigation}) {
 
     const {brown, gray, main, mainLight, yellow} = colors
     const [data, setData] = useState(burgerData)
-    const [deliveryButtonTap, setDeliveryButtonTap] = useState({
-        left: true,
-        right: false,
-    })
-    const [menuButtonsStyle, setMenuButtonsStyle] = useState([
-        true, false, false
-    ])
-    const [scrollDirection, setScrollDirection] = useState('')
-    const lastScreenPosition = useRef(0)
-    const flatlistHeaderPosition = useRef([])
+   
     
     const myRef = useRef(null)
-    const value = useRef(new Animated.Value(0)).current
-    const windowHeight = Dimensions.get('window').height
-    
-
-
-   
-
-
-
-
-
-
+        const value = useRef(new Animated.Value(0)).current
+            const windowHeight = Dimensions.get('window').height
 
     const scrollHandler = (id) => {
             myRef.current.scrollToIndex({index: id}) 
@@ -49,79 +30,7 @@ export default function Main ({navigation}) {
     }
         
 
-
-    const deliveryButtonHandle = (direction) => {
-                if(direction === 'left')  
-                setDeliveryButtonTap({left: true, right: false})
-                else setDeliveryButtonTap({left: false, right: true})
-    }
-
-
-    useEffect(() => {
-        console.log(data[0].selected)
-    },[data])
-
-
-
-
-
-
-    const checkFlatistItemsPosition = (event, item) => {
-        if(item.header) {
-            let mainHeight = styles.mainContainer.height
-            let itemHeight = event.nativeEvent.layout.height
-            let offset = itemHeight * item.id + mainHeight
-            flatlistHeaderPosition.current.push(offset)
-        }
-    }
-
-    
-    const menuButtonsAnimation  = (event) => {
-
-            const y = event.nativeEvent.contentOffset.y
-            const f = flatlistHeaderPosition.current
-
-            // setOffsetY(y)
-
-            // if(y < f[1] - 100) {
-            //         if(!menuButtonsStyle[0])
-            //         setMenuButtonsStyle([ true, false, false ])
-            // }
-            // else if(y < f[2] - 100) {
-            //         if(!menuButtonsStyle[1])
-            //         setMenuButtonsStyle([ false, true, false ])
-            // }
-            // else if(!menuButtonsStyle[2])
-            //         setMenuButtonsStyle([ false, false, true ])
-
-            
-
-
-            // if(y > lastScreenPosition.current &&
-            //      scrollDirection !== 'down') setScrollDirection('down')
-
-            // if(y < lastScreenPosition.current &&
-            //      scrollDirection !== 'up') { setScrollDirection('Up') }
-                
-            // lastScreenPosition.current = y
-
-
-
-
-            }
-    
- 
-        
-    
-
-    
-
-          
-    
-
-
- 
-    
+  
    
                 
      
@@ -131,58 +40,51 @@ export default function Main ({navigation}) {
        
     const renderItem = ({item}) => {
                return (
+                
                     <>
                
-                    {item.id === 1 && <Banner deliveryButtonLeft={deliveryButtonTap.left}
-                                              deliveryButtonRight={deliveryButtonTap.right}  
-                                              isActive={deliveryButtonHandle}
+                    {item.id === 1 && <Banner />  }
                                               
-                                              />}
+                                              
+                                              
 
 
                     {item.id === 2 && 
-                            <Animated.ScrollView
-                                         horizontal={true}
-                                         style={[styles.horizontalScroll,
-                                                // {transform: [{translateY: value.interpolate({     
-                                                //     inputRange: [0, styles.mainContainer.height + 60, windowHeight * 1000 ],
-                                                //     outputRange: [0, 0, windowHeight * 1000],
-                                                //     extrapolate: 'clamp'
-                                                // })}]}
-                                   ]}>  
-                                    <MenuButtons scrollHandle={scrollHandler}/>                                 
-
-                            </Animated.ScrollView>
-                           
+                    <MenuButtons scrollHandle={scrollHandler}
+                                 animatedValue={value}/>                                 
                     }
 
 
 
 
-                    {item.header && <View><Text style={
-                                                styles.menuHeaderText}>{item.header}
-                                    </Text></View> }
+                    {item.header && 
+                    <View>
+                    <Text style={styles.menuHeaderText}>
+                    {item.header}
+                    </Text></View> }
                                         
 
 
-                    {item.id > 2 && !item.header &&
-                        <TouchableOpacity 
-                                            onLayout={(event) => {checkFlatistItemsPosition(event,item)}}
-                                            onPress={() => navigation.navigate('Screen',
-                                                        {id: item.id, title: item.title}
-                                                        )}>
-                                
-                            <BurgerStyle title={item.title}
-                                            info={item.info ? item.info.substring(0, 100)  + '...' : ''}
-                                            price={item.price}
-                                            image={item.image}
-                                            header={item.header}
 
-                                            />
-                        </TouchableOpacity>
+
+                    {item.id > 2 && !item.header &&
+                    <TouchableOpacity onPress={() => navigation.navigate('Screen',
+                                                    {id: item.id, title: item.title}
+                                                    )}>
+                            
+                        <BurgerStyle title={item.title}
+                                        info={item.info ? item.info.substring(0, 100)  + '...' : ''}
+                                        price={item.price}
+                                        image={item.image}
+                                        header={item.header}
+
+                                        />
+                    </TouchableOpacity>
                     }
 
                     </>
+
+
                )
              
     }
@@ -224,7 +126,7 @@ export default function Main ({navigation}) {
                                                 nativeEvent: {
                                                     contentOffset: { y: value }
                                                         }}],
-                                                {useNativeDriver: true })}
+                                                {useNativeDriver: false })}
                                     ref={myRef}
                                     style={{marginBottom: 50, zIndex: 0}}
                                     keyExtractor={item => item.id}
@@ -368,16 +270,7 @@ const styles = StyleSheet.create({
             color: colors.brown
         },
 
-        horizontalScroll: {
-           
-            backgroundColor: colors.main,
-            paddingBottom: 10,
-            marginLeft: 5,
-            marginRight: 12,
-            zIndex: 3,
-            
-            
-        },
+       
         
 
 })

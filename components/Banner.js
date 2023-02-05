@@ -1,4 +1,4 @@
-import React from 'react'
+import {React, useState} from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native'
 import colors from './colors'
 const {main, brown, yellow} = colors
@@ -6,7 +6,11 @@ const {main, brown, yellow} = colors
 
 
 
-export default function Banner ({deliveryButtonLeft, deliveryButtonRight, isActive}) {
+export default function Banner ({isActive}) {
+        const [deliveryButtonTap, setDeliveryButtonTap] = useState({
+                left: true,
+                right: false
+        })
         const windowWidth = Dimensions.get('window').width * 0.9
         const ratio = 620 / 960;
         const imageWidth = windowWidth * ratio
@@ -24,19 +28,23 @@ export default function Banner ({deliveryButtonLeft, deliveryButtonRight, isActi
                                                 <TouchableOpacity style={[styles.buttonDeliveryMini,
 
                                                 
-                                                                        deliveryButtonLeft ? 
+                                                                        deliveryButtonTap.left ? 
                                                                         {backgroundColor: main} : 
                                                                         {backgroundColor: brown}
                                                                         ]}
                                                                        
 
 
-                                                                onPress={() => isActive('left')
+                                                                onPress={() => {
+                                                                        if(!deliveryButtonTap.left)setDeliveryButtonTap(
+                                                                        {left: true, right: false}
+                                                                                
+                                                                        )}
                                                                 } >
                                                         
                                                         <Text style={[{fontSize: 16,
                                                                         fontWeight: 700},
-                                                                        deliveryButtonLeft ?
+                                                                        deliveryButtonTap.left ?
                                                                         {color: brown} : {color: main}] }>Доставка</Text>
                                                 </TouchableOpacity>
 
@@ -46,7 +54,7 @@ export default function Banner ({deliveryButtonLeft, deliveryButtonRight, isActi
                                                                         {marginRight: 5},
 
 
-                                                                        deliveryButtonRight ? 
+                                                                        deliveryButtonTap.right ? 
                                                                         {backgroundColor: main} : 
                                                                         {backgroundColor: brown}
                                                                         ]}
@@ -54,12 +62,16 @@ export default function Banner ({deliveryButtonLeft, deliveryButtonRight, isActi
 
 
 
-                                                                        onPress={() => isActive('right')
+                                                                        onPress={() => {
+                                                                                if(!deliveryButtonTap.right) setDeliveryButtonTap(
+                                                                                {left: false, right: true}
+                                                                                        
+                                                                        )}
                                                         }>
 
                                                         <Text style={[{fontSize: 16,
                                                                         fontWeight: 700},
-                                                                        deliveryButtonRight ?
+                                                                        deliveryButtonTap.right ?
                                                                         {color: brown} : {color: main}] }>Доставка</Text>
                                                 </TouchableOpacity>
                                 </View>

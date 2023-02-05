@@ -1,48 +1,68 @@
 import {React, memo, useState, useEffect} from "react";
-import { ScrollView, StyleSheet, TouchableOpacity, Text, View, ProgressBarAndroidBase } from "react-native";
+import { ScrollView, Animated, StyleSheet, TouchableOpacity, Text, View, ProgressBarAndroidBase } from "react-native";
 import colors from "./colors";
 
 
 
 
 
-    function MenuButtons ({scrollHandle}) {
+    function MenuButtons ({scrollHandle, animatedValue}) {
 
-        const [selected, setSelected] = useState([true, false, false, false, false, false])
+        const {red, brown, transparent} = colors
+        const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
+        
+        // useEffect(() => {
+        //     animatedValue.addListener((event) => console.log(event.value))
+        // }, [animatedValue])
 
 
-        useEffect(() => {
-            console.log(selected)
-        })
 
 
     return (
 
-        <ScrollView  horizontal={true}
-                     style={styles.wrapper}>
+             <Animated.ScrollView 
+                                  horizontal={true}
+                                  style={[styles.horizontalScroll,
+                                        {transform: [{translateX: animatedValue.interpolate({     
+                                            inputRange: [0, 1600, 1650, 2600, 2650 ],
+                                            outputRange: [0, 0, - 25, - 25, -250],
+                                            extrapolate: 'clamp'
+                                        })}]}
+                                   ]}>  
 
 
 
 
 
-                    <TouchableOpacity 
-                                    onPress={() => {
-                                        scrollHandle(3)
-                                        if(!selected[0]) setSelected(selected => [  true,
-                                                                                    false,
-                                                                                    false,
-                                                                                    false,
-                                                                                    false,
-                                                                                    false])
-                                    }}
-                                    style={styles.menu}>
-                                <Text 
-                                    style={selected[0] ? 
-                                        [styles.text, {color: colors.red}] : 
-                                        [styles.text, {color: colors. brown}]}>
+
+
+                    <AnimatedTouchable 
+                                    onPress={() => scrollHandle(3)}
+                                    style={[styles.menu, 
+                                               { borderColor:
+                                                animatedValue.interpolate({
+                                                    inputRange: [0, 1450, 1460],
+                                                    outputRange: [red,
+                                                                  red,
+                                                                  transparent],
+                                                    extrapolate: 'clamp'
+                                                })}]}>
+
+
+
+                                <Animated.Text 
+                                    style={[styles.text, 
+                                            {color: animatedValue.interpolate({
+                                            inputRange: [0, 1450, 1460],
+                                            outputRange: [red,
+                                                          red,
+                                                          brown],
+                                            extrapolate: 'clamp'
+                                     })}]}>
+                                         
                                 Новинки
-                                </Text>
-                    </TouchableOpacity>
+                                </Animated.Text>
+                    </AnimatedTouchable>
 
 
 
@@ -52,114 +72,111 @@ import colors from "./colors";
 
 
 
-                    <TouchableOpacity 
-                                    onPress={() => {
-                                        scrollHandle(3)
-                                        if(!selected[1]) setSelected(selected => [  false,
-                                                                                    true,
-                                                                                    false,
-                                                                                    false,
-                                                                                    false,
-                                                                                    false])
-                                    }}
-                                    style={styles.menu}>
-                                <Text 
-                                    style={selected[1] ? 
-                                        [styles.text, {color: colors.red}] : 
-                                        [styles.text, {color: colors. brown}]}>
+                    <AnimatedTouchable 
+                                    onPress={() => scrollHandle(8)}
+                                    style={[styles.menu, 
+                                           { borderColor:
+                                                animatedValue.interpolate({
+                                                    inputRange: [0, 1450, 1460, 2630, 2640],
+                                                    outputRange: [transparent,
+                                                                transparent,
+                                                                red,
+                                                                red,
+                                                                transparent],
+                                                    extrapolate: 'clamp'
+                                            })}]}>
+
+
+                               <Animated.Text 
+                                    style={[styles.text, 
+                                            {color: animatedValue.interpolate({
+                                            inputRange: [0, 1450, 1460, 2630, 2640],
+                                            outputRange: [brown,
+                                                          brown,
+                                                          red,
+                                                          red,
+                                                          brown],
+                                            extrapolate: 'clamp'
+                                     })}]}>
+                                         
                                 Бургеры из говядины
-                                </Text>
-                    </TouchableOpacity>
+                                </Animated.Text>
+                    </AnimatedTouchable>
 
 
 
 
-                    <TouchableOpacity 
-                                    onPress={() => {
-                                        scrollHandle(8)
-                                        if(!selected[2]) setSelected(selected => [  false,
-                                                                                    false,
-                                                                                    true,
-                                                                                    false,
-                                                                                    false,
-                                                                                    false])
-                                    }}
-                                    style={styles.menu}>
-                                <Text 
-                                    style={selected[2] ? 
-                                        [styles.text, {color: colors.red}] : 
-                                        [styles.text, {color: colors. brown}]}>
+                    <AnimatedTouchable 
+                                    onPress={() => scrollHandle(14)}
+                                    style={[styles.menu, 
+                                        {
+                                            borderColor:
+                                            animatedValue.interpolate({
+                                                inputRange: [0, 2630, 2640],
+                                                outputRange: [transparent,
+                                                              transparent,
+                                                              red],
+                                                extrapolate: 'clamp'
+                                            })}]}>
+
+
+                                <Animated.Text 
+                                     style={[styles.text, 
+                                            {color: animatedValue.interpolate({
+                                            inputRange: [0, 2630, 2640],
+                                            outputRange: [brown,
+                                                          brown,
+                                                          red],
+                                            extrapolate: 'clamp'
+                                    })}]}>
                                 Бургеры из курицы
-                                </Text>
-                    </TouchableOpacity>
+                                </Animated.Text>
+                    </AnimatedTouchable>
 
 
 
 
-                    <TouchableOpacity 
-                                    onPress={() => {
-                                        scrollHandle(14)
-                                        if(!selected[3]) setSelected(selected => [  false,
-                                                                                    false,
-                                                                                    false,
-                                                                                    true,
-                                                                                    false,
-                                                                                    false])
-                                    }}
-                                    style={styles.menu}>
-                                <Text 
-                                    style={selected[3] ? 
-                                        [styles.text, {color: colors.red}] : 
-                                        [styles.text, {color: colors. brown}]}>
+                    <AnimatedTouchable 
+                                    onPress={() => scrollHandle(16)}
+                                    style={[styles.menu, {borderBottomColor: transparent}]}>
+                                <Animated.Text 
+                                    style={[styles.text, 
+                                            {color: animatedValue.interpolate({
+                                            inputRange: [0, 3600, 3610],
+                                            outputRange: [brown,
+                                                          brown,
+                                                          red],
+                                            extrapolate: 'clamp'
+                                    })}]}>
                                 Креветки
-                                </Text>
-                    </TouchableOpacity>
+                                </Animated.Text>
+                    </AnimatedTouchable>
 
 
 
 
-                    <TouchableOpacity 
-                                    onPress={() => {
-                                        scrollHandle(3)
-                                        if(!selected[4]) setSelected(selected => [  false,
-                                                                                    false,
-                                                                                    false,
-                                                                                    false,
-                                                                                    true,
-                                                                                    false])
-                                    }}
+                    <AnimatedTouchable 
+                                    onPress={() => scrollHandle(18)}
                                     style={styles.menu}>
-                                <Text 
-                                    style={selected[4] ? 
-                                        [styles.text, {color: colors.red}] : 
-                                        [styles.text, {color: colors. brown}]}>
+                                <Animated.Text 
+                                    style={styles.text}>
                                 Роллы
-                                </Text>
-                    </TouchableOpacity>
+                                </Animated.Text>
+                    </AnimatedTouchable>
 
 
 
 
-                    <TouchableOpacity 
-                                    onPress={() => {
-                                        scrollHandle(3)
-                                        if(!selected[5]) setSelected(selected => [  false,
-                                                                                    false,
-                                                                                    false,
-                                                                                    false,
-                                                                                    false,
-                                                                                    true])
-                                    }}
+                    <AnimatedTouchable 
+                                    onPress={() =>  scrollHandle(20)}
                                     style={styles.menu}>
-                                <Text 
-                                    style={selected[5] ? 
-                                        [styles.text, {color: colors.red}] : 
-                                        [styles.text, {color: colors. brown}]}>
+                                <Animated.Text 
+                                    style={styles.text}>
                                 Закуски
-                                </Text>
-                    </TouchableOpacity>
+                                </Animated.Text>
+                    </AnimatedTouchable>
 
-        </ScrollView>
+        </Animated.ScrollView>
     )
     
 }
@@ -179,8 +196,10 @@ const styles = StyleSheet.create({
     },
 
     menu: {
-        height: 30,
+        height: 40,
         backgroundColor: colors.main,
+        borderBottomWidth: 3
+        
 
         
     },
@@ -188,10 +207,21 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         fontWeight: 700,
-        marginRight: 20,
+        marginRight: 5,
+        marginLeft: 10
        
-    }
-
+    },
+    horizontalScroll: {
+           
+        backgroundColor: colors.main,
+        paddingBottom: 10,
+        marginLeft: 20,
+        marginRight: 12,
+        zIndex: 3,
+        width: 800
+        
+        
+    },
 
 })
 
