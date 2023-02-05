@@ -1,31 +1,37 @@
-import React, { useRef, useState, memo } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import colors from "./colors";
-import MenuButtons from "./MenuButtons";
 
 
 
- function BurgerStyle ({image, title, info, price, header, menuButtons}) {
+ function BurgerStyle ({route, navigation, menu}) {
 
-    const myRef2 = useRef(null)
-   
+
+
+    const burgerList = menu.map(i => {
+        return  <TouchableOpacity key={i.id}
+        
+                            style={styles.card}>
+                            <Image style={styles.image} source={i.image}></Image>
+                            <View >
+                                <Text style={styles.title}>{i.title}</Text>
+                                <Text style={styles.info}>{i.info ? i.info.substring(0, 100)  + '...' : ''}</Text>
+                                <Text style={styles.price}>{i.price}</Text>
+                            </View>
+                </TouchableOpacity>
+       
+    })
+
+
 
     return (
-         <View style={styles.article}>
-                        <Image style={styles.image} source={image}></Image>
-                        <View >
-                            <Text style={styles.title}>{title}</Text>
-                            <Text style={styles.info}>{info}</Text>
-                            <Text style={styles.price}>{price}</Text>
-                        </View>
-                   </View>
-      
 
 
-//     ref={myRef => { myRef.measure((x, y, width, height, px, py) => {
-//         console.log(x, y, width, height, px, py)
-// }) }} 
+        <View>
+            {burgerList}
+        </View>
 
+
+ 
     )
     
 }
@@ -33,7 +39,7 @@ import MenuButtons from "./MenuButtons";
 
 
 const styles = StyleSheet.create({
-    article: {
+    card: {
         height: 130,
         marginRight: 30,
         marginLeft: 30,
@@ -85,4 +91,4 @@ const styles = StyleSheet.create({
 
 
 
-export default memo (BurgerStyle)
+export default  BurgerStyle

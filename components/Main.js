@@ -5,7 +5,6 @@ import BurgerStyle from "./BurgerStyle"
 import colors from "./colors"
 import { Dimensions } from "react-native"
 import MenuButtons from "./MenuButtons"
-import StickyHeader from "./StickyHeader"
 import Banner from "./Banner"
 
 
@@ -18,18 +17,22 @@ export default function Main ({navigation}) {
 
     const {brown, gray, main, mainLight, yellow} = colors
     const [data, setData] = useState(burgerData)
+    const menuBlocksHeight = useRef([])
    
     
     const myRef = useRef(null)
         const value = useRef(new Animated.Value(0)).current
-            const windowHeight = Dimensions.get('window').height
 
     const scrollHandler = (id) => {
             myRef.current.scrollToIndex({index: id}) 
 
     }
-        
 
+        
+    const checkForItemSize = (event) => {
+        console.log(event.nativeEvent.layout.height)
+    }
+    
   
    
                 
@@ -38,7 +41,7 @@ export default function Main ({navigation}) {
             
     
        
-    const renderItem = ({item}) => {
+    const renderItem = ({item, index}) => {
                return (
                 
                     <>
@@ -51,37 +54,27 @@ export default function Main ({navigation}) {
 
                     {item.id === 2 && 
                     <MenuButtons scrollHandle={scrollHandler}
-                                 animatedValue={value}/>                                 
+                                 animatedValue={value}
+                                 menuBlocksHeight={menuBlocksHeight.current}
+                                 data={data}/>                                 
                     }
 
 
 
 
                     {item.header && 
-                    <View>
-                    <Text style={styles.menuHeaderText}>
-                    {item.header}
-                    </Text></View> }
+                    <View onLayout={checkForItemSize}>
+                         <Text style={styles.menuHeaderText}>
+                            {item.header}
+                         </Text>
+                    
+                    <BurgerStyle menu={item.menu} />
+                    
+                    </View> }
                                         
 
 
-
-
-                    {item.id > 2 && !item.header &&
-                    <TouchableOpacity onPress={() => navigation.navigate('Screen',
-                                                    {id: item.id, title: item.title}
-                                                    )}>
-                            
-                        <BurgerStyle title={item.title}
-                                        info={item.info ? item.info.substring(0, 100)  + '...' : ''}
-                                        price={item.price}
-                                        image={item.image}
-                                        header={item.header}
-
-                                        />
-                    </TouchableOpacity>
-                    }
-
+                    
                     </>
 
 
@@ -119,9 +112,9 @@ export default function Main ({navigation}) {
 
 
                     <Animated.FlatList data={data}
-                                    getItemLayout={(data, index) => (
-                                        {length: 200, offset: 200 * index, index}
-                                      )}
+                                    // getItemLayout={(data, index) => (
+                                    //     {length: 200, offset: 200 * index, index}
+                                    //   )}
                                     onScroll={Animated.event([{
                                                 nativeEvent: {
                                                     contentOffset: { y: value }
@@ -130,7 +123,7 @@ export default function Main ({navigation}) {
                                     ref={myRef}
                                     style={{marginBottom: 50, zIndex: 0}}
                                     keyExtractor={item => item.id}
-                                    CellRendererComponent={renderItem}
+                                    renderItem={renderItem}
                                     stickyHeaderHiddenOnScroll={false}
                                     stickyHeaderIndices={[0,2]}
                                     ListHeaderComponent={() => {

@@ -1,4 +1,4 @@
-import {React, memo, useState, useEffect} from "react";
+import {React, memo, useState, useEffect, useCallback} from "react";
 import { ScrollView, Animated, StyleSheet, TouchableOpacity, Text, View, ProgressBarAndroidBase } from "react-native";
 import colors from "./colors";
 
@@ -6,16 +6,34 @@ import colors from "./colors";
 
 
 
-    function MenuButtons ({scrollHandle, animatedValue}) {
+    function MenuButtons ({scrollHandle, animatedValue, data, menuBlocksHeight}) {
 
         const {red, brown, transparent} = colors
         const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
+        const bannerHeight = 540
+        const menuCardHeight = 160
+        const menuHeaderHeight = 200
+
+
         
+        // const offsetY = []
+        // data.forEach(i => { if(i.menu) {
+        //     offsetY.unshift(i.menu.length *  menuCardHeight + bannerHeight + menuHeaderHeight) }
+        // })
+        //так я получил координаты верха (появления заголовка внизу)
+        //надо же еще высоту айтемов впереди учитывать, епта
+       //а надо получить координаты дна
+       //onlayout? может получать размеры элементов оттуда?
+
+
+
+
+
         // useEffect(() => {
         //     animatedValue.addListener((event) => console.log(event.value))
         // }, [animatedValue])
 
-
+      
 
 
     return (
@@ -37,7 +55,7 @@ import colors from "./colors";
 
 
                     <AnimatedTouchable 
-                                    onPress={() => scrollHandle(3)}
+                                    onPress={() => scrollHandle(2)}
                                     style={[styles.menu, 
                                                { borderColor:
                                                 animatedValue.interpolate({
@@ -73,7 +91,7 @@ import colors from "./colors";
 
 
                     <AnimatedTouchable 
-                                    onPress={() => scrollHandle(8)}
+                                    onPress={() => scrollHandle(3)}
                                     style={[styles.menu, 
                                            { borderColor:
                                                 animatedValue.interpolate({
@@ -107,7 +125,7 @@ import colors from "./colors";
 
 
                     <AnimatedTouchable 
-                                    onPress={() => scrollHandle(14)}
+                                    onPress={() => scrollHandle(4)}
                                     style={[styles.menu, 
                                         {
                                             borderColor:
@@ -227,4 +245,4 @@ const styles = StyleSheet.create({
 
 
 
-export default memo( MenuButtons)
+export default MenuButtons
