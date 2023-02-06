@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback, useMemo} from "react"
+import { useRef, React, useEffect, useState, useCallback, useMemo, useLayoutEffect} from "react"
 import { FlatList, View, Text, StyleSheet, TouchableOpacity, TextInput, Animated, StatusBar, Image, ScrollView, Button } from "react-native"
 import burgerData from "./data/data"
 import BurgerStyle from "./BurgerStyle"
@@ -18,8 +18,8 @@ export default function Main ({navigation}) {
     const {brown, gray, main, mainLight, yellow} = colors
     const [data, setData] = useState(burgerData)
     const menuBlocksHeight = useRef([])
+    const [testState, setTestState] = useState([])
    
-    
     const myRef = useRef(null)
         const value = useRef(new Animated.Value(0)).current
 
@@ -28,18 +28,24 @@ export default function Main ({navigation}) {
 
     }
 
-        
-    const checkForItemSize = (event) => {
-        console.log(event.nativeEvent.layout.height)
-    }
+
+    // const checkForItemSize = (event) => {
+    //     const {height} = event.nativeEvent.layout
+       
+    //     console.log(height)
+    // }
     
   
-   
-                
-     
+  
+    // useEffect(() => {
+    //     console.log(testState)
+    // }, [testState])
                 
             
     
+
+
+
        
     const renderItem = ({item, index}) => {
                return (
@@ -55,7 +61,7 @@ export default function Main ({navigation}) {
                     {item.id === 2 && 
                     <MenuButtons scrollHandle={scrollHandler}
                                  animatedValue={value}
-                                 menuBlocksHeight={menuBlocksHeight.current}
+                                 itemLayout={testState}
                                  data={data}/>                                 
                     }
 
@@ -63,12 +69,17 @@ export default function Main ({navigation}) {
 
 
                     {item.header && 
-                    <View onLayout={checkForItemSize}>
+                    <View onLayout={event => {
+                        const {height} = event.nativeEvent.layout
+                        testState.length ? setTestState([...testState, height]) : 
+                                           setTestState([height])
+                      
+                    }} >
                          <Text style={styles.menuHeaderText}>
                             {item.header}
                          </Text>
                     
-                    <BurgerStyle menu={item.menu} />
+                    <BurgerStyle menu={item.menu}/>
                     
                     </View> }
                                         
@@ -82,9 +93,8 @@ export default function Main ({navigation}) {
              
     }
             
-  
- 
- 
+
+    
         
     
 
@@ -112,6 +122,7 @@ export default function Main ({navigation}) {
 
 
                     <Animated.FlatList data={data}
+                                       
                                     // getItemLayout={(data, index) => (
                                     //     {length: 200, offset: 200 * index, index}
                                     //   )}

@@ -1,4 +1,4 @@
-import {React, memo, useState, useEffect, useCallback} from "react";
+import {React, memo, useState, useRef, useEffect, useCallback, useLayoutEffect} from "react";
 import { ScrollView, Animated, StyleSheet, TouchableOpacity, Text, View, ProgressBarAndroidBase } from "react-native";
 import colors from "./colors";
 
@@ -6,33 +6,22 @@ import colors from "./colors";
 
 
 
-    function MenuButtons ({scrollHandle, animatedValue, data, menuBlocksHeight}) {
+    function MenuButtons ({scrollHandle, animatedValue, data, menuBlocksHeight, itemLayout}) {
 
         const {red, brown, transparent} = colors
+        const itemsHeight = useRef()
         const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
-        const bannerHeight = 540
-        const menuCardHeight = 160
-        const menuHeaderHeight = 200
-
 
         
-        // const offsetY = []
-        // data.forEach(i => { if(i.menu) {
-        //     offsetY.unshift(i.menu.length *  menuCardHeight + bannerHeight + menuHeaderHeight) }
-        // })
-        //так я получил координаты верха (появления заголовка внизу)
-        //надо же еще высоту айтемов впереди учитывать, епта
-       //а надо получить координаты дна
-       //onlayout? может получать размеры элементов оттуда?
+        useEffect(() => {
+            if(itemLayout.length === data.length - 2) {
+                itemsHeight.current = itemLayout
+                console.log(itemsHeight.current)
+            }
+        }, [itemLayout])
 
-
-
-
-
-        // useEffect(() => {
-        //     animatedValue.addListener((event) => console.log(event.value))
-        // }, [animatedValue])
-
+   
+        
       
 
 
@@ -155,7 +144,7 @@ import colors from "./colors";
 
 
                     <AnimatedTouchable 
-                                    onPress={() => scrollHandle(16)}
+                                    onPress={() => scrollHandle(5)}
                                     style={[styles.menu, {borderBottomColor: transparent}]}>
                                 <Animated.Text 
                                     style={[styles.text, 
