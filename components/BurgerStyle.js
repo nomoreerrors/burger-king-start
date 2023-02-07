@@ -1,15 +1,16 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {React, useRef} from "react";
 import colors from "./colors";
 
 
 
  function BurgerStyle ({route, navigation, menu}) {
 
-
+    const menuButtonsRef = useRef()
 
     const burgerList = menu.map(i => {
-        return  <TouchableOpacity key={i.id}
-        
+        return  <TouchableOpacity 
+                            key={i.id}
                             style={styles.card}>
                             <Image style={styles.image} source={i.image}></Image>
                             <View >
@@ -26,8 +27,12 @@ import colors from "./colors";
     return (
 
 
-        <View>
-            {burgerList}
+        <View ref={(ref) =>  menuButtonsRef.current = ref}
+                          onLayout={event => {
+                            menuButtonsRef.current.measure((fx, fy, width, height, px, py) => {
+                            // console.log(py)
+                            })}}>
+        {burgerList}
         </View>
 
 

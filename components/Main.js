@@ -1,4 +1,4 @@
-import { useRef, React, useEffect, useState, useCallback, useMemo, useLayoutEffect} from "react"
+import { useRef, React, useEffect, useState, useCallback, createRef, useMemo, useLayoutEffect} from "react"
 import { FlatList, View, Text, StyleSheet, TouchableOpacity, TextInput, Animated, StatusBar, Image, ScrollView, Button } from "react-native"
 import burgerData from "./data/data"
 import BurgerStyle from "./BurgerStyle"
@@ -17,11 +17,11 @@ export default function Main ({navigation}) {
 
     const {brown, gray, main, mainLight, yellow} = colors
     const [data, setData] = useState(burgerData)
-    const menuBlocksHeight = useRef([])
     const [testState, setTestState] = useState([])
    
     const myRef = useRef(null)
-        const value = useRef(new Animated.Value(0)).current
+        const menuButtonsRef = useRef()
+            const value = useRef(new Animated.Value(0)).current
 
     const scrollHandler = (id) => {
             myRef.current.scrollToIndex({index: id}) 
@@ -29,19 +29,11 @@ export default function Main ({navigation}) {
     }
 
 
-    // const checkForItemSize = (event) => {
-    //     const {height} = event.nativeEvent.layout
-       
-    //     console.log(height)
-    // }
-    
   
-  
-    // useEffect(() => {
-    //     console.log(testState)
-    // }, [testState])
                 
-            
+            // useEffect(() => {
+            //     console.log(menuButtonsRef.current)
+            // },[ menuButtonsRef])
     
 
 
@@ -50,7 +42,7 @@ export default function Main ({navigation}) {
     const renderItem = ({item, index}) => {
                return (
                 
-                    <>
+                    <View>
                
                     {item.id === 1 && <Banner />  }
                                               
@@ -59,34 +51,35 @@ export default function Main ({navigation}) {
 
 
                     {item.id === 2 && 
-                    <MenuButtons scrollHandle={scrollHandler}
+                    <MenuButtons 
+                                 scrollHandle={scrollHandler}
                                  animatedValue={value}
                                  itemLayout={testState}
-                                 data={data}/>                                 
-                    }
+                                 data={data}/>   
+                                }
 
 
-
+                                
 
                     {item.header && 
-                    <View onLayout={event => {
-                        const {height} = event.nativeEvent.layout
-                        testState.length ? setTestState([...testState, height]) : 
-                                           setTestState([height])
-                      
-                    }} >
-                         <Text style={styles.menuHeaderText}>
+                    <View  onLayout={event => {
+                                const {height} = event.nativeEvent.layout
+                                testState.length ? setTestState([...testState, height]) : 
+                                                                 setTestState([height])
+                        
+                        }} >
+                            <Text style={styles.menuHeaderText}>
                             {item.header}
-                         </Text>
-                    
+                            </Text>
+                        
                     <BurgerStyle menu={item.menu}/>
-                    
+
                     </View> }
                                         
 
 
                     
-                    </>
+                    </View>
 
 
                )
@@ -111,11 +104,40 @@ export default function Main ({navigation}) {
 
                     </View>
 
-            
+
+
+                {/* {data.map(i => {
+                    if(i.id === 4) {
+                   return <View style={styles.header} 
+                            key={i.id}
+                            ref={(ref) =>  menuButtonsRef.current = ref}
+                          onLayout={event => {
+                            menuButtonsRef.current.measure((fx, fy, width, height, px, py) => {
+                            console.log(py)
+                            })}}>
+                            <Text style={[styles.headerText, {height: 400}]}>МенюМенюМенюМенюМеню
+                            </Text>
+
+                    </View>} 
+                   
+                   else return <View style={styles.header} 
+                            key={i.id}
+                            ref={(ref) =>  menuButtonsRef.current = ref}
+                            onLayout={event => {
+                            menuButtonsRef.current.measure((fx, fy, width, height, px, py) => {
+                            console.log(py)
+                            })}}>
+                            <Text style={styles.headerText}>МенюМенюМенюМенюМеню
+                            </Text>
+
+                     </View> })}
+                    */}
+                        
+                        
         
         
 
- 
+
  
 
             
@@ -136,7 +158,7 @@ export default function Main ({navigation}) {
                                     keyExtractor={item => item.id}
                                     renderItem={renderItem}
                                     stickyHeaderHiddenOnScroll={false}
-                                    stickyHeaderIndices={[0,2]}
+                                    stickyHeaderIndices={[0, 2]}
                                     ListHeaderComponent={() => {
                                                         return  <View style={{
                                                         backgroundColor: colors.brown,

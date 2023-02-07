@@ -11,12 +11,14 @@ import colors from "./colors";
         const {red, brown, transparent} = colors
         const itemsHeight = useRef()
         const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
-
+        const [isLoading, setIsLoading] = useState(false)
+        
         
         useEffect(() => {
             if(itemLayout.length === data.length - 2) {
                 itemsHeight.current = itemLayout
-                console.log(itemsHeight.current)
+                // console.log(itemsHeight.current)
+                setIsLoading(true)
             }
         }, [itemLayout])
 
@@ -26,17 +28,25 @@ import colors from "./colors";
 
 
     return (
-
-             <Animated.ScrollView 
+        <>                      
+           {isLoading &&  <Animated.ScrollView 
+                                   
                                   horizontal={true}
+                                  showsHorizontalScrollIndicator={false}
                                   style={[styles.horizontalScroll,
                                         {transform: [{translateX: animatedValue.interpolate({     
-                                            inputRange: [0, 1600, 1650, 2600, 2650 ],
-                                            outputRange: [0, 0, - 25, - 25, -250],
+                                            inputRange: 
+                                                 [0,
+                                                 itemsHeight.current[0],
+                                                 itemsHeight.current[0] * 2,
+                                                 itemsHeight.current[0] * 2,
+                                                 ],
+                                            outputRange: [0, 0, - 25, -25 ],
                                             extrapolate: 'clamp'
                                         })}]}
                                    ]}>  
-
+                            {/* отсчет-то у нас от верха приложения! Раньше я считал offset
+                            учти высоту баннера и прочего */}
 
 
 
@@ -183,7 +193,12 @@ import colors from "./colors";
                                 </Animated.Text>
                     </AnimatedTouchable>
 
-        </Animated.ScrollView>
+        </Animated.ScrollView> 
+        
+        
+        
+        }
+    </>
     )
     
 }
@@ -222,10 +237,9 @@ const styles = StyleSheet.create({
            
         backgroundColor: colors.main,
         paddingBottom: 10,
+        marginRight: 20,
         marginLeft: 20,
-        marginRight: 12,
         zIndex: 3,
-        width: 800
         
         
     },
