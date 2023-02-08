@@ -5,6 +5,7 @@ import BurgerStyle from "./BurgerStyle"
 import colors from "./colors"
 import { Dimensions } from "react-native"
 import MenuButtons from "./MenuButtons"
+import MenuButtons2 from "./MenuButtons2"
 import Banner from "./Banner"
 
 
@@ -18,24 +19,34 @@ export default function Main ({navigation}) {
     const {brown, gray, main, mainLight, yellow} = colors
     const [data, setData] = useState(burgerData)
     const [itemOffset, setItemOffset] = useState([])
-    const [horizontalScroll, setHorizontalScroll] = useState(0)
+    const [toggle, setToggle] = useState()
 
 
 
 
     
-    const refs = data.map(((i, index)  => index = createRef()))
-         const myRef = useRef(null)
+    const itemsOffsetRef = data.map(((i, index)  => index = createRef()))
+        const horizontalFlatlistRef = useRef(null)
+         const verticalFlatListRef = useRef(null)
             const value = useRef(new Animated.Value(0)).current
 
-    const scrollHandler = (id) => {
-            myRef.current.scrollToIndex({index: id}) 
+    const verticalScroll = (id) => {
+            verticalFlatListRef.current.scrollToIndex({index: id}) 
 
     }
 
 
+    const horizontalScroll = (index) => {
+        console.log('horizontal scroll working')
+        horizontalFlatlistRef.current.scrollToIndex({index: index})
+    }
 
-  
+
+
+  useEffect(() => {
+     
+    console.log(toggle)
+  }, [toggle])
   
 
        
@@ -51,22 +62,38 @@ export default function Main ({navigation}) {
 
 
                     {item.id === 2 && 
-                    <MenuButtons 
-                                 scrollHandle={scrollHandler}
-                                 horizontalScroll={horizontalScroll}
-                                 animatedValue={value}
-                                 itemOffset={itemOffset}
-                                 data={data}/>   
-                                }
+
+                      <FlatList data={data}
+                                ref={horizontalFlatlistRef}
+                                horizontal={true}
+                                renderItem={({item}) => {
+                                        if(item.header)
+                                        return <MenuButtons2 
+                                                verticalScroll={() => verticalScroll(item.id - 1)}
+                                                animatedValue={value}
+                                                itemOffset={itemOffset}
+                                                header={item.header}
+                                                key={item.id}
+                                                data={data}
+                                                />   
+                                            }}>
+
+                        </FlatList>
+                    }
+                    
+                  
 
 
                                 
 
                     {item.header && 
-                            <View  ref={(ref) =>  refs[index].current = ref}
+                            <View  ref={(ref) =>  itemsOffsetRef[index].current = ref}
                                 onLayout={event => {
-                                        refs[index].current.measure((fx, fy, width, height, px, py) => {
+                                        itemsOffsetRef[index].current.measure((
+                                                        fx, fy, width, 
+                                                        height, px, py) => {
                                             setItemOffset(itemOffset => [...itemOffset, py])
+                                            
                                         })
                                         
 
@@ -124,25 +151,60 @@ export default function Main ({navigation}) {
 
 
                     <Animated.FlatList data={data}
-                                       
-                                    // getItemLayout={(data, index) => (
-                                    //     {length: 200, offset: 200 * index, index}
-                                    //   )}
                                     onScroll={Animated.event([{
                                                 nativeEvent: {
                                                     contentOffset: { y: value }
                                                         }}],
                                                 {listener: event => {
                                                     const offsetY = event.nativeEvent.contentOffset.y
-                                                    if (horizontalScroll !== 1 && offsetY > 1000)
-                                                        setHorizontalScroll(1)
-                                                    if (horizontalScroll !== 2 && offsetY > 2000) 
-                                                        setHorizontalScroll(2)
+                                                     if(itemOffset.length === data.length - 2) {
+                                                        // console.log('OffsetY:' + offsetY)
+                                                        itemOffset.forEach((i, index )=> {
+                                                            if(offsetY > i - 200 && offsetY < i + 5) {
+                                                            horizontalScroll(index + 2)
+                                                            console.log(index + 2)
+                                                            }
+                                                        })
+                                                     }
+
+
+
+
+
+
+                                                    //  if(itemOffset.length === data.length - 2) {
+                                                    //     if(offsetY < itemOffset[0] && toggle !== 1) {
+                                                    //     setToggle(1)
+                                                    //     horizontalScroll(1)
+
+                                                    // } else if
+                                                    //     (offsetY > itemOffset[0] &&
+                                                    //      offsetY < itemOffset[1] &&
+                                                    //      toggle !== 2) {
+                                                    //      setToggle(2)
+                                                    //      horizontalScroll(2)
+                                                      
+                                                    // } else if
+                                                    //     (offsetY > itemOffset[1] &&
+                                                    //      offsetY < itemOffset[2] &&
+                                                    //      toggle !== 3) {
+                                                    //      setToggle(3)
+                                                    //      horizontalScroll(4)
+                                                      
+                                                    // } else if
+                                                    //     (offsetY > itemOffset[2] && toggle !== 4) {
+                                                    //     setToggle(4)
+                                                    //     horizontalScroll(5)
+                                                    //   }
+
+
+
+                                                    // }
                                                 },
 
                                                     useNativeDriver: false }
                                                 )}
-                                    ref={myRef}
+                                    ref={verticalFlatListRef}
                                     style={{marginBottom: 50, zIndex: 0}}
                                     keyExtractor={item => item.id}
                                     renderItem={renderItem}
