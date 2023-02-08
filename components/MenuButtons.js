@@ -1,47 +1,60 @@
 import {React, memo, useState, useRef, useEffect, useCallback, useLayoutEffect} from "react";
-import { ScrollView, Animated, StyleSheet, TouchableOpacity, Text, View, ProgressBarAndroidBase } from "react-native";
+import { ScrollView, Animated, StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, ProgressBarAndroidBase, Dimensions } from "react-native";
 import colors from "./colors";
 
 
 
 
 
-    function MenuButtons ({scrollHandle, animatedValue, data, menuBlocksHeight, itemLayout}) {
+    function MenuButtons ({scrollHandle, animatedValue, data, itemOffset, horizontalScroll}) {
 
         const {red, brown, transparent} = colors
-        const itemsHeight = useRef()
+        const offsetY = useRef()
         const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
         const [isLoading, setIsLoading] = useState(false)
-        
+        const scrollRef = useRef(null)
         
         useEffect(() => {
-            if(itemLayout.length === data.length - 2) {
-                itemsHeight.current = itemLayout
-                // console.log(itemsHeight.current)
+            if(itemOffset.length === data.length - 2) {
+                offsetY.current = itemOffset
+                // console.log(offsetY.current)
                 setIsLoading(true)
             }
-        }, [itemLayout])
+        }, [itemOffset])
 
-   
+
+        useEffect(() => {
+            // scrollRef.current.scrollToIndex({index: horizontalScroll})
+            scrollRef.current.scrollToInde
+            console.log(horizontalScroll)
+        },[horizontalScroll])
         
       
+        
+
+
+
 
 
     return (
         <>                      
+            {!isLoading && <ActivityIndicator color={colors.brown}
+                                              size={50}/>}
+
            {isLoading &&  <Animated.ScrollView 
-                                   
+                                  ref={scrollRef}
                                   horizontal={true}
                                   showsHorizontalScrollIndicator={false}
                                   style={[styles.horizontalScroll,
                                         {transform: [{translateX: animatedValue.interpolate({     
                                             inputRange: 
                                                  [0,
-                                                 itemsHeight.current[0],
-                                                 itemsHeight.current[0] * 2,
-                                                 itemsHeight.current[0] * 2,
+                                                 offsetY.current[1] - 200,
+                                                 offsetY.current[1] - 150,
+                                                 offsetY.current[2] - 200,
+                                                 offsetY.current[2] - 150,
                                                  ],
-                                            outputRange: [0, 0, - 25, -25 ],
+                                            outputRange: [0, 0, -25, -25, -150,  ],
                                             extrapolate: 'clamp'
                                         })}]}
                                    ]}>  

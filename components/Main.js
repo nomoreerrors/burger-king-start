@@ -17,10 +17,15 @@ export default function Main ({navigation}) {
 
     const {brown, gray, main, mainLight, yellow} = colors
     const [data, setData] = useState(burgerData)
-    const [testState, setTestState] = useState([])
-   
-    const myRef = useRef(null)
-        const menuButtonsRef = useRef()
+    const [itemOffset, setItemOffset] = useState([])
+    const [horizontalScroll, setHorizontalScroll] = useState(0)
+
+
+
+
+    
+    const refs = data.map(((i, index)  => index = createRef()))
+         const myRef = useRef(null)
             const value = useRef(new Animated.Value(0)).current
 
     const scrollHandler = (id) => {
@@ -29,14 +34,9 @@ export default function Main ({navigation}) {
     }
 
 
+
   
-                
-            // useEffect(() => {
-            //     console.log(menuButtonsRef.current)
-            // },[ menuButtonsRef])
-    
-
-
+  
 
        
     const renderItem = ({item, index}) => {
@@ -53,8 +53,9 @@ export default function Main ({navigation}) {
                     {item.id === 2 && 
                     <MenuButtons 
                                  scrollHandle={scrollHandler}
+                                 horizontalScroll={horizontalScroll}
                                  animatedValue={value}
-                                 itemLayout={testState}
+                                 itemOffset={itemOffset}
                                  data={data}/>   
                                 }
 
@@ -62,19 +63,23 @@ export default function Main ({navigation}) {
                                 
 
                     {item.header && 
-                    <View  onLayout={event => {
-                                const {height} = event.nativeEvent.layout
-                                testState.length ? setTestState([...testState, height]) : 
-                                                                 setTestState([height])
-                        
-                        }} >
-                            <Text style={styles.menuHeaderText}>
-                            {item.header}
-                            </Text>
-                        
-                    <BurgerStyle menu={item.menu}/>
+                            <View  ref={(ref) =>  refs[index].current = ref}
+                                onLayout={event => {
+                                        refs[index].current.measure((fx, fy, width, height, px, py) => {
+                                            setItemOffset(itemOffset => [...itemOffset, py])
+                                        })
+                                        
 
-                    </View> }
+                                }} >
+                                    
+                                    <Text style={styles.menuHeaderText}>
+                                    {item.header}
+                                    </Text>
+                                
+                            <BurgerStyle menu={item.menu}/>
+
+                            </View> 
+                    }
                                         
 
 
@@ -106,32 +111,7 @@ export default function Main ({navigation}) {
 
 
 
-                {/* {data.map(i => {
-                    if(i.id === 4) {
-                   return <View style={styles.header} 
-                            key={i.id}
-                            ref={(ref) =>  menuButtonsRef.current = ref}
-                          onLayout={event => {
-                            menuButtonsRef.current.measure((fx, fy, width, height, px, py) => {
-                            console.log(py)
-                            })}}>
-                            <Text style={[styles.headerText, {height: 400}]}>МенюМенюМенюМенюМеню
-                            </Text>
-
-                    </View>} 
-                   
-                   else return <View style={styles.header} 
-                            key={i.id}
-                            ref={(ref) =>  menuButtonsRef.current = ref}
-                            onLayout={event => {
-                            menuButtonsRef.current.measure((fx, fy, width, height, px, py) => {
-                            console.log(py)
-                            })}}>
-                            <Text style={styles.headerText}>МенюМенюМенюМенюМеню
-                            </Text>
-
-                     </View> })}
-                    */}
+               
                         
                         
         
@@ -152,7 +132,16 @@ export default function Main ({navigation}) {
                                                 nativeEvent: {
                                                     contentOffset: { y: value }
                                                         }}],
-                                                {useNativeDriver: false })}
+                                                {listener: event => {
+                                                    const offsetY = event.nativeEvent.contentOffset.y
+                                                    if (horizontalScroll !== 1 && offsetY > 1000)
+                                                        setHorizontalScroll(1)
+                                                    if (horizontalScroll !== 2 && offsetY > 2000) 
+                                                        setHorizontalScroll(2)
+                                                },
+
+                                                    useNativeDriver: false }
+                                                )}
                                     ref={myRef}
                                     style={{marginBottom: 50, zIndex: 0}}
                                     keyExtractor={item => item.id}

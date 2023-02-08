@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import {React, useRef} from "react";
+import {React, useEffect, useRef} from "react";
 import colors from "./colors";
 
 
@@ -22,7 +22,9 @@ import colors from "./colors";
        
     })
 
-
+    // useEffect(() => {
+    //     console.log('burgerstyle updated')
+    // }, [])
 
     return (
 
