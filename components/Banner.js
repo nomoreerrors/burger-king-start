@@ -21,7 +21,7 @@ export default function Banner ({isActive}) {
     return (
 
                         
-                        <View style={styles.mainContainer}>
+                        <View style={styles.mainContainer} >
                                 <View style={[styles.buttonWrapper, {height: 110, marginTop: 20}]}>
                                         <View style={styles.buttonDelivery}>
 

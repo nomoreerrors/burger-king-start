@@ -12,6 +12,7 @@ export default [
 
     {
         id: 3,
+        isActive: true,
         header: 'Новинки',
         menu: [
             
@@ -38,6 +39,7 @@ export default [
     {
         id: 4,
         header: 'Бургеры из говядины',
+        isActive: false,
         menu: [
             
             {id: 1,
@@ -82,6 +84,7 @@ export default [
     {
         id: 5,
         header: 'Бургеры из курицы',
+        isActive: false,
         menu: [
             
             {id: 1,
@@ -105,6 +108,7 @@ export default [
     {
         id: 6,
         header: 'Роллы',
+        isActive: false,
         menu: [
             
             {id: 1,
@@ -128,6 +132,7 @@ export default [
     {
         id: 7,
         header: 'Закуски',
+        isActive: false,
         menu: [
             
             {id: 1,

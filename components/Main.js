@@ -18,36 +18,64 @@ export default function Main ({navigation}) {
 
     const {brown, gray, main, mainLight, yellow} = colors
     const [data, setData] = useState(burgerData)
-    const [itemOffset, setItemOffset] = useState([])
-    const [toggle, setToggle] = useState()
+    const [activeMenuButton, setActiveMenuButton] = useState(
+                                        data.filter(i => i.header).map(
+                                                    i => i.isActive))
+    const flatListItemContainersOffsetY = useRef()
+    console.log(activeMenuButton)
+
+    useEffect(() => {
+
+        const flatlistitemHeight = 120
+        const flatlistItemContainers = data.filter(i => i.menu)
+        const flatListItemsContainersHeight = flatlistItemContainers.map(i => {
+                            return (i.menu.length + 1 ) * flatlistitemHeight })
+        
 
 
+        const flatlistHeight = flatListItemsContainersHeight.reduce((acc, value) => acc + value)
+        const flatlistOffset = 685
+        const appHeight = flatlistOffset + flatlistHeight
+        
+
+
+
+        let c = appHeight
+        flatListItemContainersOffsetY.current =
+                 flatListItemsContainersHeight.map((i => (c = c - i))).reverse()
+
+    }, [data])
+
+
+
+
+
+ 
 
 
     
-    const itemsOffsetRef = data.map(((i, index)  => index = createRef()))
         const horizontalFlatlistRef = useRef(null)
          const verticalFlatListRef = useRef(null)
             const value = useRef(new Animated.Value(0)).current
 
-    const verticalScroll = (id) => {
-            verticalFlatListRef.current.scrollToIndex({index: id}) 
 
-    }
+        const verticalScroll = (id) => {
+                verticalFlatListRef.current.scrollToIndex({index: id}) 
 
-
-    const horizontalScroll = (index) => {
-        console.log('horizontal scroll working')
-        horizontalFlatlistRef.current.scrollToIndex({index: index})
-    }
+        }
 
 
+        const horizontalScroll = (index) => {
+            horizontalFlatlistRef.current.scrollToIndex({index: index + 1})
 
-  useEffect(() => {
-     
-    console.log(toggle)
-  }, [toggle])
+        }
+
+
+
   
+ 
+
+
 
        
     const renderItem = ({item, index}) => {
@@ -66,12 +94,12 @@ export default function Main ({navigation}) {
                       <FlatList data={data}
                                 ref={horizontalFlatlistRef}
                                 horizontal={true}
-                                renderItem={({item}) => {
+                                renderItem={({item, index}) => {
                                         if(item.header)
                                         return <MenuButtons2 
                                                 verticalScroll={() => verticalScroll(item.id - 1)}
                                                 animatedValue={value}
-                                                itemOffset={itemOffset}
+                                                isActive={activeMenuButton[index - 2]}
                                                 header={item.header}
                                                 key={item.id}
                                                 data={data}
@@ -87,18 +115,7 @@ export default function Main ({navigation}) {
                                 
 
                     {item.header && 
-                            <View  ref={(ref) =>  itemsOffsetRef[index].current = ref}
-                                onLayout={event => {
-                                        itemsOffsetRef[index].current.measure((
-                                                        fx, fy, width, 
-                                                        height, px, py) => {
-                                            setItemOffset(itemOffset => [...itemOffset, py])
-                                            
-                                        })
-                                        
-
-                                }} >
-                                    
+                            <View >
                                     <Text style={styles.menuHeaderText}>
                                     {item.header}
                                     </Text>
@@ -126,7 +143,7 @@ export default function Main ({navigation}) {
 
     return (
             
-            <View style={{backgroundColor: main}}>
+            <View style={{backgroundColor: main}} >
                     
 
                     <StatusBar backgroundColor={colors.brown}/>
@@ -156,51 +173,13 @@ export default function Main ({navigation}) {
                                                     contentOffset: { y: value }
                                                         }}],
                                                 {listener: event => {
-                                                    const offsetY = event.nativeEvent.contentOffset.y
-                                                     if(itemOffset.length === data.length - 2) {
-                                                        // console.log('OffsetY:' + offsetY)
-                                                        itemOffset.forEach((i, index )=> {
-                                                            if(offsetY > i - 200 && offsetY < i + 5) {
-                                                            horizontalScroll(index + 2)
-                                                            console.log(index + 2)
-                                                            }
-                                                        })
-                                                     }
-
-
-
-
-
-
-                                                    //  if(itemOffset.length === data.length - 2) {
-                                                    //     if(offsetY < itemOffset[0] && toggle !== 1) {
-                                                    //     setToggle(1)
-                                                    //     horizontalScroll(1)
-
-                                                    // } else if
-                                                    //     (offsetY > itemOffset[0] &&
-                                                    //      offsetY < itemOffset[1] &&
-                                                    //      toggle !== 2) {
-                                                    //      setToggle(2)
-                                                    //      horizontalScroll(2)
-                                                      
-                                                    // } else if
-                                                    //     (offsetY > itemOffset[1] &&
-                                                    //      offsetY < itemOffset[2] &&
-                                                    //      toggle !== 3) {
-                                                    //      setToggle(3)
-                                                    //      horizontalScroll(4)
-                                                      
-                                                    // } else if
-                                                    //     (offsetY > itemOffset[2] && toggle !== 4) {
-                                                    //     setToggle(4)
-                                                    //     horizontalScroll(5)
-                                                    //   }
-
-
-
-                                                    // }
-                                                },
+                                                        const offsetY = event.nativeEvent.contentOffset.y
+                                                        
+                                                        flatListItemContainersOffsetY.current.forEach(
+                                                            (i, index ) => {
+                                                                if(offsetY > i - 200 && offsetY < i + 5) {
+                                                                horizontalScroll(index)
+                                                                }})},
 
                                                     useNativeDriver: false }
                                                 )}

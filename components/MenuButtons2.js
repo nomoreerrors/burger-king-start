@@ -6,62 +6,27 @@ import colors from "./colors";
 
 
 
-    function MenuButtons ({verticalScroll, animatedValue, data, itemOffset, header}) {
+    function MenuButtons ({verticalScroll, isActive, header}) {
 
         const {red, brown, transparent} = colors
-        const offsetY = useRef()
         const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
-        const [isLoading, setIsLoading] = useState(false)
-        const scrollRef = useRef(null)
-        
-        useEffect(() => {
-            if(itemOffset.length === data.length - 2) {
-                offsetY.current = itemOffset
-                // console.log(offsetY.current)
-                setIsLoading(true)
-            }
-        }, [itemOffset])
-
-
-       
         
       
-        
-
-
-
 
 
     return (
-        <AnimatedTouchable    
+        <AnimatedTouchable          
                                     onPress={verticalScroll}
-                                    style={[styles.menu, 
-                                            //    { borderColor:
-                                            //     animatedValue.interpolate({
-                                            //         inputRange: [0, 1450, 1460],
-                                            //         outputRange: [red,
-                                            //                       red,
-                                            //                       transparent],
-                                            //         extrapolate: 'clamp'
-                                            //     })}
-                                                ]}>
-
-
-
+                                    style={styles.menu}>
+                                                
                                 <Animated.Text 
-                                    style={[styles.text, 
-                                    //         {color: animatedValue.interpolate({
-                                    //         inputRange: [0, 1450, 1460],
-                                    //         outputRange: [red,
-                                    //                       red,
-                                    //                       brown],
-                                    //         extrapolate: 'clamp'
-                                    //  })}
-                                     ]}>
+                                    style={isActive ? styles.isActive : styles.isNotActive}>
+                                     
+
                                          
                                 {header}
                                 </Animated.Text>
-    </AnimatedTouchable>
+        </AnimatedTouchable>
 
     )
     
@@ -91,13 +56,23 @@ const styles = StyleSheet.create({
         
     },
 
-    text: {
+    isActive: {
+        fontSize: 20,
+        fontWeight: 700,
+        marginRight: 20,
+        marginLeft: 20,
+        color: colors.red,
+       
+    },
+
+    isNotActive: {
         fontSize: 20,
         fontWeight: 700,
         marginRight: 20,
         marginLeft: 20
        
     },
+
     horizontalScroll: {
            
         backgroundColor: colors.main,

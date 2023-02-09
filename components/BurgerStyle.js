@@ -32,7 +32,7 @@ import colors from "./colors";
         <View ref={(ref) =>  menuButtonsRef.current = ref}
                           onLayout={event => {
                             menuButtonsRef.current.measure((fx, fy, width, height, px, py) => {
-                            // console.log(py)
+                            // console.log(height)
                             })}}>
         {burgerList}
         </View>
