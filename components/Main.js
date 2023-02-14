@@ -5,7 +5,6 @@ import BurgerStyle from "./BurgerStyle"
 import colors from "./colors"
 import { Dimensions } from "react-native"
 import MenuButtons from "./MenuButtons"
-import MenuButtons2 from "./MenuButtons2"
 import Banner from "./Banner"
 
 
@@ -22,35 +21,41 @@ export default function Main ({navigation}) {
                                         data.filter(i => i.header).map(
                                                     i => i.isActive))
     const flatListItemContainersOffsetY = useRef()
-    console.log(activeMenuButton)
+    const flatListItemsContainersHeight = useRef()
+
+
+
+
 
     useEffect(() => {
 
-        const flatlistitemHeight = 120
+        const flatlistitemHeight = 160
         const flatlistItemContainers = data.filter(i => i.menu)
-        const flatListItemsContainersHeight = flatlistItemContainers.map(i => {
+        flatListItemsContainersHeight.current = flatlistItemContainers.map(i => {
                             return (i.menu.length + 1 ) * flatlistitemHeight })
         
 
+         
 
-        const flatlistHeight = flatListItemsContainersHeight.reduce((acc, value) => acc + value)
-        const flatlistOffset = 685
-        const appHeight = flatlistOffset + flatlistHeight
-        
-
-
-
-        let c = appHeight
+        let c = 0
         flatListItemContainersOffsetY.current =
-                 flatListItemsContainersHeight.map((i => (c = c - i))).reverse()
+                 flatListItemsContainersHeight.current.map((i, index) => {
+                    if(index === 0) return 0
+                    else return c += flatListItemsContainersHeight.current[index - 1]
+                    
+                 })
 
     }, [data])
 
 
 
+  
 
 
- 
+
+
+
+
 
 
     
@@ -60,79 +65,59 @@ export default function Main ({navigation}) {
 
 
         const verticalScroll = (id) => {
-                verticalFlatListRef.current.scrollToIndex({index: id}) 
-
+            verticalFlatListRef.current.scrollToIndex({index: id - 1}) 
+           
+            
+            
+            
         }
 
-
-        const horizontalScroll = (index) => {
-            horizontalFlatlistRef.current.scrollToIndex({index: index + 1})
-
-        }
-
-
-
-  
  
+ 
+
+
+
+
 
 
 
        
     const renderItem = ({item, index}) => {
-               return (
+        return (
                 
-                    <View>
+            <View>
                
                     {item.id === 1 && <Banner />  }
                                               
-                                              
-                                              
-
-
                     {item.id === 2 && 
 
-                      <FlatList data={data}
-                                ref={horizontalFlatlistRef}
-                                horizontal={true}
-                                renderItem={({item, index}) => {
-                                        if(item.header)
-                                        return <MenuButtons2 
-                                                verticalScroll={() => verticalScroll(item.id - 1)}
-                                                animatedValue={value}
-                                                isActive={activeMenuButton[index - 2]}
-                                                header={item.header}
-                                                key={item.id}
-                                                data={data}
-                                                />   
-                                            }}>
-
-                        </FlatList>
-                    }
+                            <FlatList data={data}
+                                    ref={horizontalFlatlistRef}
+                                    horizontal={true}
+                                    renderItem={({item, index}) => {
+                                            if(item.header)
+                                            return <MenuButtons 
+                                                    verticalScroll={() => verticalScroll(item.id)}
+                                                    animatedValue={value}
+                                                    isActive={activeMenuButton[index - 2]}
+                                                    header={item.header}
+                                                    key={item.id}
+                                                    data={data}
+                                                    />   
+                                                }}>
+                                </FlatList>
+                            }
                     
-                  
+                    {item.header &&  <View >
+                                        <Text style={styles.menuHeaderText}>
+                                        {item.header}
+                                        </Text>
+                                        <BurgerStyle menu={item.menu}/>
+                                    </View> 
+                                                                             }
 
-
-                                
-
-                    {item.header && 
-                            <View >
-                                    <Text style={styles.menuHeaderText}>
-                                    {item.header}
-                                    </Text>
-                                
-                            <BurgerStyle menu={item.menu}/>
-
-                            </View> 
-                    }
-                                        
-
-
-                    
-                    </View>
-
-
-               )
-             
+            </View>
+            )
     }
             
 
@@ -144,14 +129,10 @@ export default function Main ({navigation}) {
     return (
             
             <View style={{backgroundColor: main}} >
-                    
-
-                    <StatusBar backgroundColor={colors.brown}/>
-
-                    <View style={styles.header} >
-                            <Text style={styles.headerText}>Меню</Text>
-
-                    </View>
+                        <StatusBar backgroundColor={colors.brown}/>
+                        <View style={styles.header} >
+                                <Text style={styles.headerText}>Меню</Text>
+                        </View>
 
 
 
@@ -167,22 +148,35 @@ export default function Main ({navigation}) {
             
 
 
-                    <Animated.FlatList data={data}
+                        <Animated.FlatList data={data}
                                     onScroll={Animated.event([{
                                                 nativeEvent: {
                                                     contentOffset: { y: value }
                                                         }}],
-                                                {listener: event => {
-                                                        const offsetY = event.nativeEvent.contentOffset.y
-                                                        
-                                                        flatListItemContainersOffsetY.current.forEach(
-                                                            (i, index ) => {
-                                                                if(offsetY > i - 200 && offsetY < i + 5) {
-                                                                horizontalScroll(index)
-                                                                }})},
+                                                        {listener: event => {
+                                                            const offsetY = event.nativeEvent.contentOffset.y
+                                                            const itemsOffset = flatListItemContainersOffsetY.current
+                                                            const itemsHeight = flatListItemsContainersHeight.current
 
-                                                    useNativeDriver: false }
-                                                )}
+
+                                                                            itemsOffset.forEach((i, index) => {
+
+                                                                                if(offsetY >= i &&
+                                                                                   offsetY <= itemsOffset[index + 1] + 200 ||
+                                                                                   offsetY > itemsOffset[itemsOffset.length - 1] + 300 &&
+                                                                                   activeMenuButton[index] === false ) {
+
+                                                                                                    horizontalFlatlistRef.current.scrollToIndex(
+                                                                                                                {index: index + 1})
+                                                                                                        
+                                                                                                    setActiveMenuButton(activeMenuButton => {
+                                                                                                        return activeMenuButton.map((item, buttonIndex) => {
+                                                                                                        return index === buttonIndex  ? true : false
+                                                                                                        })})}})},
+                                                                               
+
+                                                                    useNativeDriver: false }
+                                                                )}
                                     ref={verticalFlatListRef}
                                     style={{marginBottom: 50, zIndex: 0}}
                                     keyExtractor={item => item.id}
@@ -322,8 +316,12 @@ const styles = StyleSheet.create({
         menuHeaderText: {
             fontSize: 36,
             fontWeight: 900,
-            margin: 40,
-            color: colors.brown
+            paddingLeft: 30,
+            marginRight: 30,
+            paddingTop: 10,
+            marginTop: 30,
+            color: colors.brown,
+            height: 130
         },
 
        
