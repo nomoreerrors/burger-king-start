@@ -36,7 +36,8 @@ const Stack = createNativeStackNavigator()
 
                 <Stack.Screen name='Screen' 
                               component={FullPost} 
-                              options={{title: 'Главная'}} />
+                              options={{title: 'Главная',
+                                        headerShown: false}} />
                 
             </Stack.Navigator>
       </NavigationContainer>

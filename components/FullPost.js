@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image, Modal } from "react-native";
 import getFetch from "./GetFetch";
 
 
@@ -9,28 +9,36 @@ export default function FullPost ({route, navigation}) {
 
     const [data, setData] = useState({})
     const [isLoading, setIsLoading] = useState(false)
-    const {id, title} = route.params
+    const [modalVisible, setModalVisible] = useState(true)
+    const { eventID, menu} = route.params
 
-    
-    useState(() => {
-         
-         getFetch('https://jsonplaceholder.typicode.com/posts/' + id).then(
-                    result => {setData(result)
-                    navigation.setOptions({
-                        title,
-                     })})
-                    ,[data] })
+          
+        
                        
                         
     
 
 
     return (
+        <Modal style={{position: 'absolute', top: 200}}
+        animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                    }}>
 
-        <View style={styles.wrapper}>
-            <Text style={styles.title}>{data.title}</Text>
-            <Text style={styles.body}>{data.body}</Text>
-        </View>
+
+                    <View style={styles.wrapper}>
+                        <Text>
+                    {menu[eventID].title}
+                    {menu[eventID].info}
+                    {menu[eventID].price}
+                        </Text>
+                        <Image source={menu[eventID].image}></Image>
+                    </View>
+        </Modal>
+
 
     )
     
@@ -52,7 +60,8 @@ const styles = StyleSheet.create({
             marginRight: 10,
         },
         wrapper: {
-            flex: 1,
+            position: 'absolute',
+            top: 200,
         }
         
 })

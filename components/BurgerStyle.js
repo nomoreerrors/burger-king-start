@@ -4,12 +4,13 @@ import colors from "./colors";
 
 
 
- function BurgerStyle ({route, navigation, menu}) {
+ function BurgerStyle ({route, navigation, menu, onPress}) {
 
     const menuButtonsRef = useRef()
 
     const burgerList = menu.map(i => {
         return  <TouchableOpacity 
+                            onPress={() => onPress(i.id)}
                             key={i.id}
                             style={styles.card}>
                             <Image style={styles.image} source={i.image}></Image>
@@ -22,18 +23,11 @@ import colors from "./colors";
        
     })
 
-    // useEffect(() => {
-    //     console.log('burgerstyle updated')
-    // }, [])
 
     return (
 
 
-        <View ref={(ref) =>  menuButtonsRef.current = ref}
-                          onLayout={event => {
-                            menuButtonsRef.current.measure((fx, fy, width, height, px, py) => {
-                            // console.log(height)
-                            })}}>
+        <View >
         {burgerList}
         </View>
 

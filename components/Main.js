@@ -22,8 +22,11 @@ export default function Main ({navigation}) {
                                                     i => i.isActive))
     const flatListItemContainersOffsetY = useRef()
     const flatListItemsContainersHeight = useRef()
+    const [testState, setTestState] = useState(1)
+    const [secondTestState, setSecondTestState] = useState(1)
 
 
+    
 
 
 
@@ -108,13 +111,15 @@ export default function Main ({navigation}) {
                                 </FlatList>
                             }
                     
-                    {item.header &&  <View >
+                    {item.header &&  <View  >
                                         <Text style={styles.menuHeaderText}>
                                         {item.header}
                                         </Text>
-                                        <BurgerStyle menu={item.menu}/>
+                                        <BurgerStyle menu={item.menu}
+                                                     onPress={(id) => navigation.navigate('Screen', {eventID: id, menu: item.menu})}/>
                                     </View> 
                                                                              }
+                {/* нужно сделать уникальный id у каждого бургера */}
 
             </View>
             )
@@ -135,9 +140,7 @@ export default function Main ({navigation}) {
                         </View>
 
 
-
-               
-                        
+                
                         
         
         
@@ -156,7 +159,6 @@ export default function Main ({navigation}) {
                                                         {listener: event => {
                                                             const offsetY = event.nativeEvent.contentOffset.y
                                                             const itemsOffset = flatListItemContainersOffsetY.current
-                                                            const itemsHeight = flatListItemsContainersHeight.current
 
 
                                                                             itemsOffset.forEach((i, index) => {
@@ -166,13 +168,15 @@ export default function Main ({navigation}) {
                                                                                    offsetY > itemsOffset[itemsOffset.length - 1] + 300 &&
                                                                                    activeMenuButton[index] === false ) {
 
-                                                                                                    horizontalFlatlistRef.current.scrollToIndex(
-                                                                                                                {index: index + 1})
-                                                                                                        
-                                                                                                    setActiveMenuButton(activeMenuButton => {
-                                                                                                        return activeMenuButton.map((item, buttonIndex) => {
-                                                                                                        return index === buttonIndex  ? true : false
-                                                                                                        })})}})},
+                                                                                        setActiveMenuButton(activeMenuButton => {
+                                                                                           return activeMenuButton.map((item, buttonIndex) => {
+                                                                                               return index === buttonIndex  ? true : false
+                                                                                            })})
+
+                                                                                        horizontalFlatlistRef.current.scrollToIndex(
+                                                                                                    {index: index + 1})
+                                                                                        
+                                                                                        }})},
                                                                                
 
                                                                     useNativeDriver: false }
@@ -301,7 +305,7 @@ const styles = StyleSheet.create({
         },
 
         textInput: {
-            backgroundColor: colors.black,
+            backgroundColor: colors.mainLight,
             color: colors.main,
             fontSize: 20,
             borderRadius: 15,
