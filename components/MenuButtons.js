@@ -9,23 +9,22 @@ import colors from "./colors";
     function MenuButtons ({verticalScroll, isActive, header}) {
 
         const {red, brown, transparent} = colors
-        const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
         
 
 
     return (
-        <AnimatedTouchable          
-                                    onPress={verticalScroll}
-                                    style={styles.menu}>
+                <TouchableOpacity          
+                                onPress={verticalScroll}
+                                style={styles.menu}>
                                                 
-                                <Animated.Text 
+                                <Text 
                                     style={isActive ? styles.isActive : styles.isNotActive}>
                                      
 
                                          
                                 {header}
-                                </Animated.Text>
-        </AnimatedTouchable>
+                                </Text>
+                </TouchableOpacity>
 
     )
     

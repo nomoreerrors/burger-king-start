@@ -143,7 +143,7 @@ export default function Banner ({isActive}) {
 
 
 
-                        <Image  source={require('./img/combo.png')}
+                        <Image  source={require('./img/newBanner.jpg')}
                                 style={[{ 
                                         width: windowWidth,
                                         height: imageWidth, 

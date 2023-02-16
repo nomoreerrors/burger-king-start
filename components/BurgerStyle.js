@@ -1,21 +1,28 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacityBase } from "react-native";
-import {memo, React, useEffect, useRef} from "react";
+import {memo, React, useEffect, useRef, useState} from "react";
 import colors from "./colors";
+import FullPost from "./FullPost";
 
 
 
- function BurgerStyle ({menu, onPress}) {
+ function BurgerStyle ({menu}) {
+        const [currentItem, setCurrentItem] = useState(0)
+        const [isShown, setIsShown] = useState(false)
 
+    const fullPostHandler = (id) => {
+        setIsShown(true)
+        setCurrentItem(menu[id])
+    }
 
 
     const burgerList = menu.map(i => {
         return  <TouchableOpacity
-                            onPress={() => onPress(i.id - 1)}
+                            onPress={() => fullPostHandler(i.id - 1)}
                             key={i.id}
                             style={styles.card}>
                             <Image style={styles.image} source={i.image}></Image>
                             <View >
-                                <Text style={styles.title}>{i.title}</Text>
+                                <Text style={styles.title}>{i.title.substring(0, 16)}</Text>
                                 <Text style={styles.info}>{i.info ? i.info.substring(0, 100)  + '...' : ''}</Text>
                                 <Text style={styles.price}>{i.price}</Text>
                             </View>
@@ -23,9 +30,9 @@ import colors from "./colors";
        
     })
 
-    useEffect(() => {
-        console.log('burgerlist updated')
-    })
+    
+
+
 
 
     return (
@@ -33,6 +40,9 @@ import colors from "./colors";
 
         <View >
         {burgerList}
+        <FullPost isShown={isShown}
+                  isHidden={() => setIsShown(false)}
+                  post={currentItem}/>
         </View>
 
 

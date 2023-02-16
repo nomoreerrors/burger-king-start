@@ -1,12 +1,11 @@
-import { useRef, React, useEffect, useState, useCallback, createRef, useMemo, useLayoutEffect} from "react"
-import { FlatList, View, Text, StyleSheet, TouchableOpacity, TextInput, Animated, StatusBar, Image, ScrollView, Button } from "react-native"
+import { useRef, React, useEffect, useState, useCallback, } from "react"
+import { FlatList, View, Text, StyleSheet, TouchableOpacity, TextInput, StatusBar, Image, ScrollView, Button } from "react-native"
 import burgerData from "./data/data"
-import FullPost from "./FullPost"
 import BurgerStyle from "./BurgerStyle"
 import colors from "./colors"
-import { Dimensions } from "react-native"
 import MenuButtons from "./MenuButtons"
 import Banner from "./Banner"
+import Search from "./Search"
 
 
 
@@ -14,25 +13,23 @@ import Banner from "./Banner"
 
 
 
-export default function Main ({navigation}) {
+export default function Main () {
 
-    const {brown, gray, main, mainLight, yellow} = colors
-    const [data, setData] = useState(burgerData)
-    const [activeMenuButton, setActiveMenuButton] = useState(
-                                        data.filter(i => i.header).map(
-                                                    i => i.isActive))
-    const flatListItemContainersOffsetY = useRef()
-    const flatListItemsContainersHeight = useRef()
 
-    const [currentPost, setCurrentPost] = useState({})
-    const [fullPostIsShown, setFullPostIsShown] = useState(false)
 
-    
+        const {brown, gray, main, mainLight, yellow} = colors
+        const [data, setData] = useState(burgerData)
+        const [activeMenuButton, setActiveMenuButton] = useState(
+                                            data.filter(i => i.header).map(
+                                                        i => i.isActive))
 
-   const fullPostHandler = (obj) => {
-        setCurrentPost(currentPost =>  obj)
-        setFullPostIsShown(true)
-   }
+
+        const flatListItemContainersOffsetY = useRef()
+        const flatListItemsContainersHeight = useRef()
+        const horizontalFlatlistRef = useRef(null)
+        const verticalFlatListRef = useRef(null)
+
+
 
 
 
@@ -49,9 +46,6 @@ export default function Main ({navigation}) {
         flatListItemsContainersHeight.current = flatlistItemContainers.map(i => {
                             return (i.menu.length + 1 ) * flatlistitemHeight })
         
-
-         
-
         let c = 0
         flatListItemContainersOffsetY.current =
                  flatListItemsContainersHeight.current.map((i, index) => {
@@ -59,37 +53,44 @@ export default function Main ({navigation}) {
                     else return c += flatListItemsContainersHeight.current[index - 1]
                     
                  })
-
     }, [data])
 
 
 
-    useEffect(() => {
-        'Main component updated'
-    })
+   
+
+
+
+ 
+
+
+    const verticalScroll = (id) => {
+            verticalFlatListRef.current.scrollToIndex({index: id - 1}) 
+        }
 
 
 
 
+
+
+
+
+    const horizontalFlatlistAnimation = (index) => {
+        
+            setActiveMenuButton(activeMenuButton => {
+                    return activeMenuButton.map((i, buttonIndex) => {
+                        return index === buttonIndex  ? true : false
+                })})
+
+                            horizontalFlatlistRef.current.scrollToIndex(
+                                                {index: index + 1})
+    }
+
+ 
 
 
 
     
-        const horizontalFlatlistRef = useRef(null)
-         const verticalFlatListRef = useRef(null)
-
-
-        const verticalScroll = (id) => {
-            verticalFlatListRef.current.scrollToIndex({index: id - 1}) 
-           
-            
-            
-            
-        }
-
- 
- 
-
 
    const renderHorizontalItem = ({item, index}) => {
             if(item.header)
@@ -122,10 +123,7 @@ export default function Main ({navigation}) {
                                         <Text style={styles.menuHeaderText}>
                                         {item.header}
                                         </Text>
-                                        <BurgerStyle menu={item.menu}
-                                                     onPress={(postID) => {
-                                                     fullPostHandler(item.menu[postID])}}
-                                                      />
+                                        <BurgerStyle menu={item.menu}/>
                                     </View> 
                                                                              }
             </View>
@@ -133,6 +131,7 @@ export default function Main ({navigation}) {
     }
             
 
+ 
     
         
     
@@ -142,76 +141,39 @@ export default function Main ({navigation}) {
             
             <View style={{backgroundColor: main}} >
                         <StatusBar backgroundColor={colors.brown}/>
-                        <View style={styles.header} >
-                                <Text style={styles.headerText}>Меню</Text>
-                        </View>
+
+                            <View style={styles.header} >
+                            <Text style={styles.headerText}>Меню</Text>
+                            </View>
 
 
-                
-                <FullPost   visible={fullPostIsShown}
-                            onClose={() => setFullPostIsShown(false)}
-                            post={currentPost}/>
-                    
+               
         
 
                         <FlatList data={data}
-                                    initialNumToRender={7}
-                                    onScroll={event => {
+                                     ref={verticalFlatListRef}
+                                     style={{marginBottom: 50, zIndex: 0}}
+                                     keyExtractor={item => item.id}
+                                     renderItem={renderItem}
+                                     stickyHeaderHiddenOnScroll={false}
+                                     stickyHeaderIndices={[0, 2]}
+                                     ListHeaderComponent={ <Search /> }
+                                     initialNumToRender={7}
+                                     onScroll={event => {
                                                 const offsetY = event.nativeEvent.contentOffset.y
                                                 const itemsOffset = flatListItemContainersOffsetY.current
-
-
-                                                itemsOffset.forEach((i, index) => {
-
-                                                    if(offsetY >= i &&
-                                                        offsetY <= itemsOffset[index + 1] + 200 ||
-                                                        offsetY > itemsOffset[itemsOffset.length - 1] + 300 &&
-                                                        activeMenuButton[index] === false ) {
-
-                                                        setActiveMenuButton(activeMenuButton => {
-                                                            return activeMenuButton.map((item, buttonIndex) => {
-                                                                return index === buttonIndex  ? true : false
-                                                            })})
-
-                                                        horizontalFlatlistRef.current.scrollToIndex(
-                                                                    {index: index + 1})
-
-                                                        }})}}
-                                                                                        
-                                    ref={verticalFlatListRef}
-                                    style={{marginBottom: 50, zIndex: 0}}
-                                    keyExtractor={item => item.id}
-                                    renderItem={renderItem}
-                                    stickyHeaderHiddenOnScroll={false}
-                                    stickyHeaderIndices={[0, 2]}
-                                    ListHeaderComponent={() => {
-                                                        return  <View style={{
-                                                        backgroundColor: colors.brown,
-                                                        width: Dimensions.get('window').width,
-                                                        }} >
-                                    
-                                                        <TextInput style={styles.textInput}></TextInput>
-                                                        
-                                                        </View> 
-                                    
-                                    }}
-                                    > 
+                                                    itemsOffset.forEach((i, index) => {
+                                                            if(offsetY >= i &&
+                                                            offsetY <= itemsOffset[index + 1] + 200 ||
+                                                            offsetY > itemsOffset[itemsOffset.length - 1] + 300 &&
+                                                            activeMenuButton[index] === false ) {
+                                                                horizontalFlatlistAnimation(index)  
+                                                            }})}}
+                                                     > 
 
 
 
                      </FlatList>
-
-
-                             
-                                    
-                                                  
-
-
-                   
-                       
-
-                    
-
 
 
 
@@ -301,18 +263,7 @@ const styles = StyleSheet.create({
             color: colors.brown,
         },
 
-        textInput: {
-            backgroundColor: colors.mainLight,
-            color: colors.main,
-            fontSize: 20,
-            borderRadius: 15,
-            marginLeft: 20,
-            marginRight: 20,
-            height: 40,
-            marginBottom: 15,
-            
-
-        },
+        
 
         menuHeaderText: {
             fontSize: 36,

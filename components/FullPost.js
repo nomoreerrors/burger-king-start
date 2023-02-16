@@ -6,9 +6,9 @@ import colors from './colors'
 
 
 
-export default function FullPost ({visible, post, onClose}) {
+export default function Fullmenu ({isShown, post, isHidden}) {
 
-   
+
                          
     
 
@@ -19,7 +19,7 @@ export default function FullPost ({visible, post, onClose}) {
             <Modal 
                     animationType="slide"
                     transparent={true}
-                    visible={visible}>
+                    visible={isShown}>
                        
                         <View style={styles.card}>
 
@@ -36,7 +36,7 @@ export default function FullPost ({visible, post, onClose}) {
                             
                             <TouchableOpacity 
                                 style={styles.button}
-                                onPress={() => onClose()}>
+                                onPress={isHidden}>
                                 <Text style={{color: 'white', fontSize: 30}}>
                                     X
                                 </Text>
