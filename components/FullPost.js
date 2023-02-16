@@ -1,42 +1,48 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, Modal } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Image, Modal, Touchable, TouchableOpacity } from "react-native";
 import getFetch from "./GetFetch";
+import colors from './colors'
 
 
 
 
-export default function FullPost ({route, navigation}) {
+export default function FullPost ({visible, post, onClose}) {
 
-    const [data, setData] = useState({})
-    const [isLoading, setIsLoading] = useState(false)
-    const [modalVisible, setModalVisible] = useState(true)
-    const { eventID, menu} = route.params
-
-          
-        
-                       
-                        
+   
+                         
     
 
 
+
+
     return (
-        <Modal style={{position: 'absolute', top: 200}}
-        animationType="slide"
+            <Modal 
+                    animationType="slide"
                     transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                    }}>
+                    visible={visible}>
+                       
+                        <View style={styles.card}>
 
+                            <Image 
+                                style={styles.image}
+                                source={post.image}></Image>
+                                
+                            
+                             <Text style={styles.titleText}>{post.title}</Text>
+                             <Text style={styles.infoText}>{post.info}</Text>
+                             <Text style={styles.priceText}>{post.price}</Text>
+                            
+                            
+                            
+                            <TouchableOpacity 
+                                style={styles.button}
+                                onPress={() => onClose()}>
+                                <Text style={{color: 'white', fontSize: 30}}>
+                                    X
+                                </Text>
+                            </TouchableOpacity>
 
-                    <View style={styles.wrapper}>
-                        <Text>
-                    {menu[eventID].title}
-                    {menu[eventID].info}
-                    {menu[eventID].price}
-                        </Text>
-                        <Image source={menu[eventID].image}></Image>
-                    </View>
+                         </View>
         </Modal>
 
 
@@ -46,22 +52,47 @@ export default function FullPost ({route, navigation}) {
 
 
 const styles = StyleSheet.create({
-        title: {
+
+      card: {
+             backgroundColor: 'white',
+             flex: 1,
+             borderTopRightRadius: 30,
+             borderTopLeftRadius: 30,
+             alignItems: 'center',
+             
+        },
+
+        image: {
+            width: 300,
+            height: 250,
+        },
+
+        titleText: {
+            fontWeight: 900,
+            fontSize: 30,
+        },
+
+        infoText: {
+            margin: 20,
+        },
+
+        priceText: {
             fontSize: 22,
-            marginBottom: 10,
-            marginTop: 30,
-            marginLeft: 30,
-            marginRight: 10,
+            fontWeight: 700,
         },
-        body: {
-            marginBottom: 10,
-            marginTop: 30,
-            marginLeft: 30,
-            marginRight: 10,
-        },
-        wrapper: {
-            position: 'absolute',
-            top: 200,
-        }
+      
+    
+
+     button: {
+        borderRadius: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 50,
+        width: 50,
+        backgroundColor: colors.brownLight,
+        position: 'absolute',
+        top: 25,
+        right: 25,
+     }
         
 })

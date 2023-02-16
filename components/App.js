@@ -20,27 +20,13 @@ function App () {
 
 
 
-const Stack = createNativeStackNavigator()
-
+ 
 
 
 
   return (
 
-      <NavigationContainer>
-          <Stack.Navigator>
-
-                <Stack.Screen name='Home'
-                              component={Main}
-                              options={{title: 'Новости', headerShown: false}} />
-
-                <Stack.Screen name='Screen' 
-                              component={FullPost} 
-                              options={{title: 'Главная',
-                                        headerShown: false}} />
-                
-            </Stack.Navigator>
-      </NavigationContainer>
+      <Main />
   )
   
 }

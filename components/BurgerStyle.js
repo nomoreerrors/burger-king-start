@@ -1,16 +1,16 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import {React, useEffect, useRef} from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacityBase } from "react-native";
+import {memo, React, useEffect, useRef} from "react";
 import colors from "./colors";
 
 
 
- function BurgerStyle ({route, navigation, menu, onPress}) {
+ function BurgerStyle ({menu, onPress}) {
 
-    const menuButtonsRef = useRef()
+
 
     const burgerList = menu.map(i => {
-        return  <TouchableOpacity 
-                            onPress={() => onPress(i.id)}
+        return  <TouchableOpacity
+                            onPress={() => onPress(i.id - 1)}
                             key={i.id}
                             style={styles.card}>
                             <Image style={styles.image} source={i.image}></Image>
@@ -21,6 +21,10 @@ import colors from "./colors";
                             </View>
                 </TouchableOpacity>
        
+    })
+
+    useEffect(() => {
+        console.log('burgerlist updated')
     })
 
 
@@ -92,4 +96,4 @@ const styles = StyleSheet.create({
 
 
 
-export default  BurgerStyle
+export default memo(BurgerStyle)

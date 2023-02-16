@@ -1,6 +1,7 @@
 import { useRef, React, useEffect, useState, useCallback, createRef, useMemo, useLayoutEffect} from "react"
 import { FlatList, View, Text, StyleSheet, TouchableOpacity, TextInput, Animated, StatusBar, Image, ScrollView, Button } from "react-native"
 import burgerData from "./data/data"
+import FullPost from "./FullPost"
 import BurgerStyle from "./BurgerStyle"
 import colors from "./colors"
 import { Dimensions } from "react-native"
@@ -22,12 +23,23 @@ export default function Main ({navigation}) {
                                                     i => i.isActive))
     const flatListItemContainersOffsetY = useRef()
     const flatListItemsContainersHeight = useRef()
-    const [testState, setTestState] = useState(1)
-    const [secondTestState, setSecondTestState] = useState(1)
 
+    const [currentPost, setCurrentPost] = useState({})
+    const [fullPostIsShown, setFullPostIsShown] = useState(false)
 
     
 
+   const fullPostHandler = (obj) => {
+        setCurrentPost(currentPost =>  obj)
+        setFullPostIsShown(true)
+   }
+
+
+
+
+
+
+   
 
 
     useEffect(() => {
@@ -52,8 +64,9 @@ export default function Main ({navigation}) {
 
 
 
-  
-
+    useEffect(() => {
+        'Main component updated'
+    })
 
 
 
@@ -64,7 +77,6 @@ export default function Main ({navigation}) {
     
         const horizontalFlatlistRef = useRef(null)
          const verticalFlatListRef = useRef(null)
-            const value = useRef(new Animated.Value(0)).current
 
 
         const verticalScroll = (id) => {
@@ -79,6 +91,16 @@ export default function Main ({navigation}) {
  
 
 
+   const renderHorizontalItem = ({item, index}) => {
+            if(item.header)
+            return <MenuButtons 
+                    verticalScroll={() => verticalScroll(item.id)}
+                    isActive={activeMenuButton[index - 2]}
+                    header={item.header}
+                    key={item.id}
+                    data={data}
+                    />   
+                }
 
 
 
@@ -87,40 +109,25 @@ export default function Main ({navigation}) {
        
     const renderItem = ({item, index}) => {
         return (
-                
             <View>
-               
                     {item.id === 1 && <Banner />  }
-                                              
                     {item.id === 2 && 
-
                             <FlatList data={data}
                                     ref={horizontalFlatlistRef}
                                     horizontal={true}
-                                    renderItem={({item, index}) => {
-                                            if(item.header)
-                                            return <MenuButtons 
-                                                    verticalScroll={() => verticalScroll(item.id)}
-                                                    animatedValue={value}
-                                                    isActive={activeMenuButton[index - 2]}
-                                                    header={item.header}
-                                                    key={item.id}
-                                                    data={data}
-                                                    />   
-                                                }}>
-                                </FlatList>
+                                    renderItem={renderHorizontalItem}>
+                            </FlatList>
                             }
-                    
                     {item.header &&  <View  >
                                         <Text style={styles.menuHeaderText}>
                                         {item.header}
                                         </Text>
                                         <BurgerStyle menu={item.menu}
-                                                     onPress={(id) => navigation.navigate('Screen', {eventID: id, menu: item.menu})}/>
+                                                     onPress={(postID) => {
+                                                     fullPostHandler(item.menu[postID])}}
+                                                      />
                                     </View> 
                                                                              }
-                {/* нужно сделать уникальный id у каждого бургера */}
-
             </View>
             )
     }
@@ -141,46 +148,36 @@ export default function Main ({navigation}) {
 
 
                 
-                        
+                <FullPost   visible={fullPostIsShown}
+                            onClose={() => setFullPostIsShown(false)}
+                            post={currentPost}/>
+                    
         
-        
+
+                        <FlatList data={data}
+                                    initialNumToRender={7}
+                                    onScroll={event => {
+                                                const offsetY = event.nativeEvent.contentOffset.y
+                                                const itemsOffset = flatListItemContainersOffsetY.current
 
 
- 
+                                                itemsOffset.forEach((i, index) => {
 
-            
+                                                    if(offsetY >= i &&
+                                                        offsetY <= itemsOffset[index + 1] + 200 ||
+                                                        offsetY > itemsOffset[itemsOffset.length - 1] + 300 &&
+                                                        activeMenuButton[index] === false ) {
 
+                                                        setActiveMenuButton(activeMenuButton => {
+                                                            return activeMenuButton.map((item, buttonIndex) => {
+                                                                return index === buttonIndex  ? true : false
+                                                            })})
 
-                        <Animated.FlatList data={data}
-                                    onScroll={Animated.event([{
-                                                nativeEvent: {
-                                                    contentOffset: { y: value }
-                                                        }}],
-                                                        {listener: event => {
-                                                            const offsetY = event.nativeEvent.contentOffset.y
-                                                            const itemsOffset = flatListItemContainersOffsetY.current
+                                                        horizontalFlatlistRef.current.scrollToIndex(
+                                                                    {index: index + 1})
 
-
-                                                                            itemsOffset.forEach((i, index) => {
-
-                                                                                if(offsetY >= i &&
-                                                                                   offsetY <= itemsOffset[index + 1] + 200 ||
-                                                                                   offsetY > itemsOffset[itemsOffset.length - 1] + 300 &&
-                                                                                   activeMenuButton[index] === false ) {
-
-                                                                                        setActiveMenuButton(activeMenuButton => {
-                                                                                           return activeMenuButton.map((item, buttonIndex) => {
-                                                                                               return index === buttonIndex  ? true : false
-                                                                                            })})
-
-                                                                                        horizontalFlatlistRef.current.scrollToIndex(
-                                                                                                    {index: index + 1})
+                                                        }})}}
                                                                                         
-                                                                                        }})},
-                                                                               
-
-                                                                    useNativeDriver: false }
-                                                                )}
                                     ref={verticalFlatListRef}
                                     style={{marginBottom: 50, zIndex: 0}}
                                     keyExtractor={item => item.id}
@@ -198,11 +195,11 @@ export default function Main ({navigation}) {
                                                         </View> 
                                     
                                     }}
-                                    >
+                                    > 
 
 
 
-                    </Animated.FlatList>
+                     </FlatList>
 
 
                              
