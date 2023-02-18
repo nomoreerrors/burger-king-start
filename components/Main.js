@@ -17,129 +17,94 @@ export default function Main () {
 
 
 
-        const {brown, gray, main, mainLight, yellow} = colors
-        const [data, setData] = useState(burgerData)
-        const [activeMenuButton, setActiveMenuButton] = useState(
-                                            data.filter(i => i.header).map(
+        const [data, setData] = useState(() => burgerData)
+        const [activeMenuButton, setActiveMenuButton] = useState(() => data.filter(i => i.header).map(
                                                         i => i.isActive))
 
 
-        const flatListItemContainersOffsetY = useRef()
-        const flatListItemsContainersHeight = useRef()
         const horizontalFlatlistRef = useRef(null)
         const verticalFlatListRef = useRef(null)
 
 
 
+        const verticalScroll = (id) => {
+                verticalFlatListRef.current.scrollToIndex({index: id - 1,
+                                                        viewOffset: 200 }) 
+            }
 
 
 
-
-
-   
-
-
-    useEffect(() => {
-
-        const flatlistitemHeight = 160
-        const flatlistItemContainers = data.filter(i => i.menu)
-        flatListItemsContainersHeight.current = flatlistItemContainers.map(i => {
-                            return (i.menu.length + 1 ) * flatlistitemHeight })
-        
-        let c = 0
-        flatListItemContainersOffsetY.current =
-                 flatListItemsContainersHeight.current.map((i, index) => {
-                    if(index === 0) return 0
-                    else return c += flatListItemsContainersHeight.current[index - 1]
-                    
-                 })
-    }, [data])
-
-
-
-   
-
-
-
- 
-
-
-    const verticalScroll = (id) => {
-            verticalFlatListRef.current.scrollToIndex({index: id - 1}) 
-        }
-
-
-
-
-
-
-
-
-    const horizontalFlatlistAnimation = (index) => {
-        
-            setActiveMenuButton(activeMenuButton => {
-                    return activeMenuButton.map((i, buttonIndex) => {
-                        return index === buttonIndex  ? true : false
-                })})
-
-                            horizontalFlatlistRef.current.scrollToIndex(
-                                                {index: index + 1})
-    }
-
- 
 
 
 
     
 
-   const renderHorizontalItem = ({item, index}) => {
-            if(item.header)
-            return <MenuButtons 
-                    verticalScroll={() => verticalScroll(item.id)}
-                    isActive={activeMenuButton[index - 2]}
-                    header={item.header}
-                    key={item.id}
-                    data={data}
-                    />   
-                }
+        const renderHorizontalItem = ({item, index}) => {
+                    if(item.header)
+                    return <MenuButtons 
+                            verticalScroll={() => verticalScroll(item.id)}
+                            isActive={activeMenuButton[index - 2]}
+                            header={item.header}
+                            key={item.id}
+                            data={data}
+                            />   
+                        }
 
 
 
 
 
        
-    const renderItem = ({item, index}) => {
-        return (
-            <View>
-                    {item.id === 1 && <Banner />  }
-                    {item.id === 2 && 
-                            <FlatList data={data}
-                                    ref={horizontalFlatlistRef}
-                                    horizontal={true}
-                                    renderItem={renderHorizontalItem}>
-                            </FlatList>
-                            }
-                    {item.header &&  <View  >
-                                        <Text style={styles.menuHeaderText}>
-                                        {item.header}
-                                        </Text>
-                                        <BurgerStyle menu={item.menu}/>
-                                    </View> 
-                                                                             }
-            </View>
-            )
-    }
-            
+        const renderItem = ({item, index}) => {
+            return <View>
+                        {item.id === 1 && <Banner />  }
+                        {item.id === 2 &&  <FlatList 
+                                                data={data}
+                                                ref={horizontalFlatlistRef}
+                                                horizontal={true}
+                                                renderItem={renderHorizontalItem}>
+                                            </FlatList>     }
+                                
+                        {item.header &&  <View  >
+                                            <Text style={styles.menuHeaderText}>
+                                            {item.header}
+                                            </Text>
+                                            <BurgerStyle menu={item.menu}/>
+                                        </View>                       }
+                </View>
+        }
+    
 
- 
-    
-        
-    
+
+
+
+    const onViewableItemsChanged = ({viewableItems}) => {
+        viewableItems.forEach(i => {
+            if(i.item.header) { 
+                    horizontalFlatlistRef.current.scrollToIndex(
+                                            {index: i.item.id - 1,
+                                            animated: true,
+                                            viewPosition: 0.5 })
+                                
+
+                            setActiveMenuButton(activeMenuButton => {
+                                return activeMenuButton.map((button, index) => {
+                                    return i.item.id - 3 === index? true : false
+                    })})
+        }})
+        }
+
+    const viewabilityConfigCallbackPairs = useRef([{ onViewableItemsChanged }])
+
+      
+
+
+
 
 
     return (
             
-            <View style={{backgroundColor: main}} >
+            <View style={{backgroundColor: colors.main}} >
                         <StatusBar backgroundColor={colors.brown}/>
 
                             <View style={styles.header} >
@@ -147,36 +112,20 @@ export default function Main () {
                             </View>
 
 
-               
-        
 
-                        <FlatList data={data}
-                                     ref={verticalFlatListRef}
-                                     style={{marginBottom: 50, zIndex: 0}}
-                                     keyExtractor={item => item.id}
-                                     renderItem={renderItem}
-                                     stickyHeaderHiddenOnScroll={false}
-                                     stickyHeaderIndices={[0, 2]}
-                                     ListHeaderComponent={ <Search /> }
-                                     initialNumToRender={7}
-                                     onScroll={event => {
-                                                const offsetY = event.nativeEvent.contentOffset.y
-                                                const itemsOffset = flatListItemContainersOffsetY.current
-                                                    itemsOffset.forEach((i, index) => {
-                                                            if(offsetY >= i &&
-                                                            offsetY <= itemsOffset[index + 1] + 200 ||
-                                                            offsetY > itemsOffset[itemsOffset.length - 1] + 300 &&
-                                                            activeMenuButton[index] === false ) {
-                                                                horizontalFlatlistAnimation(index)  
-                                                            }})}}
-                                                     > 
-
-
-
-                     </FlatList>
-
-
-
+                        <FlatList   data={data}
+                                    viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current }
+                                    ref={verticalFlatListRef}
+                                    style={{marginBottom: 50, zIndex: 0}}
+                                    keyExtractor={item => item.id}
+                                    renderItem={renderItem}
+                                    stickyHeaderHiddenOnScroll={false}
+                                    stickyHeaderIndices={[0, 2]}
+                                    ListHeaderComponent={ <Search /> }
+                                    initialNumToRender={7}
+                                     >
+                                    
+                         </FlatList>
             </View>
 
 

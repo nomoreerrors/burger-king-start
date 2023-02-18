@@ -8,7 +8,6 @@ import colors from "./colors";
 
     function MenuButtons ({verticalScroll, isActive, header}) {
 
-        const {red, brown, transparent} = colors
         
 
 
@@ -19,8 +18,6 @@ import colors from "./colors";
                                                 
                                 <Text 
                                     style={isActive ? styles.isActive : styles.isNotActive}>
-                                     
-
                                          
                                 {header}
                                 </Text>
