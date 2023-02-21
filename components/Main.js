@@ -6,7 +6,7 @@ import colors from "./colors"
 import MenuButtons from "./MenuButtons"
 import Banner from "./Banner"
 import Search from "./Search"
-
+import SnacksData from "./SnacksData"
 
 
 
@@ -18,6 +18,7 @@ export default function Main () {
 
 
         const [data, setData] = useState(() => burgerData)
+        const [snacks, setSnacks] = useState(SnacksData)
         const [activeMenuButton, setActiveMenuButton] = useState(() => data.filter(i => i.header).map(
                                                         i => i.isActive))
 
@@ -33,22 +34,20 @@ export default function Main () {
             }
 
 
-
-
-
+ 
 
     
 
         const renderHorizontalItem = ({item, index}) => {
-                    if(item.header)
-                    return <MenuButtons 
-                            verticalScroll={() => verticalScroll(item.id)}
-                            isActive={activeMenuButton[index - 2]}
-                            header={item.header}
-                            key={item.id}
-                            data={data}
-                            />   
-                        }
+                if(item.header)
+                return <MenuButtons 
+                        verticalScroll={() => verticalScroll(item.id)}
+                        isActive={activeMenuButton[index - 2]}
+                        header={item.header}
+                        key={item.id}
+                        data={data}
+                        />   
+                    }
 
 
 
@@ -62,6 +61,7 @@ export default function Main () {
                                                 data={data}
                                                 ref={horizontalFlatlistRef}
                                                 horizontal={true}
+                                                showsHorizontalScrollIndicator={false}
                                                 renderItem={renderHorizontalItem}>
                                             </FlatList>     }
                                 
@@ -69,7 +69,8 @@ export default function Main () {
                                             <Text style={styles.menuHeaderText}>
                                             {item.header}
                                             </Text>
-                                            <BurgerStyle menu={item.menu}/>
+                                            <BurgerStyle menu={item.menu}
+                                                         snacks={snacks}/>
                                         </View>                       }
                 </View>
         }

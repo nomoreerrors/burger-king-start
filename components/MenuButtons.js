@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.main,
         paddingTop: 10,
         paddingBottom: 10,
+       
         
         
     },
@@ -44,7 +45,8 @@ const styles = StyleSheet.create({
     menu: {
         height: 40,
         backgroundColor: colors.main,
-        borderBottomWidth: 3,
+        borderBottomColor: colors.gray,
+        borderBottomWidth: 2,
         
         
 
@@ -57,11 +59,15 @@ const styles = StyleSheet.create({
         marginRight: 20,
         marginLeft: 20,
         color: colors.red,
+        borderBottomColor: colors.red,
+        borderBottomWidth: 2,
+        paddingBottom: 12
        
     },
 
     isNotActive: {
         fontSize: 20,
+        color: colors.brownLight,
         fontWeight: 700,
         marginRight: 20,
         marginLeft: 20

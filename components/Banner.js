@@ -115,9 +115,7 @@ export default function Banner ({isActive}) {
                                                 marginTop: 5, 
                                                 marginLeft: 10,
                                                 color: brown}
-                                                }
-
-                                        numberOfLines={2}>
+                                                }>
                                                 
                                                 Вступай в <Text style={{ color: yellow}}>King Club!</Text>
                                         

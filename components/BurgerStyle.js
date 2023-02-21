@@ -1,23 +1,26 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacityBase } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacityBase, Dimensions } from "react-native";
 import {memo, React, useEffect, useRef, useState} from "react";
 import colors from "./colors";
 import FullPost from "./FullPost";
+import { useLinkProps } from "@react-navigation/native";
 
 
 
- function BurgerStyle ({menu}) {
+ function BurgerStyle ({menu, snacks}) {
         const [currentItem, setCurrentItem] = useState(0)
         const [isShown, setIsShown] = useState(false)
 
-    const fullPostHandler = (id) => {
-        setIsShown(true)
-        setCurrentItem(menu[id])
-    }
+        const fullPostHandler = (id) => {
+              setCurrentItem(menu[id])
+              setIsShown(true)
+        }
+
 
 
     const burgerList = menu.map(i => {
-        return  <TouchableOpacity
-                            onPress={() => fullPostHandler(i.id - 1)}
+        return  <TouchableOpacity  
+                            onPress={() => fullPostHandler(i.id - 1) }
+                                 
                             key={i.id}
                             style={styles.card}>
                             <Image style={styles.image} source={i.image}></Image>
@@ -31,17 +34,14 @@ import FullPost from "./FullPost";
     })
 
     
-
-
-
-
     return (
 
 
         <View >
         {burgerList}
-        <FullPost isShown={isShown}
-                  isHidden={() => setIsShown(false)}
+        <FullPost snacks={snacks}
+                  isShown={isShown}
+                  onClose={() => setIsShown(false)}
                   post={currentItem}/>
         </View>
 
@@ -55,6 +55,7 @@ import FullPost from "./FullPost";
 
 const styles = StyleSheet.create({
     card: {
+        justifyContent: 'center',
         height: 130,
         marginRight: 30,
         marginLeft: 30,
