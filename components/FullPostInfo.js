@@ -3,10 +3,12 @@ import { useState } from "react";
 import colors from "./colors";
 import SpecialRequestsData from "./data/SpecialRequestsData";
 import CheckBox from "./CheckBox";
+import EmptyCard from "./EmptyCard";
+import Nutrients from "./Nutrients";
 
 
 
-export default function SpecialRequests (props) {
+export default function FullPostInfo (props) {
 
         const [checkBox, setCheckBox] = useState(() => SpecialRequestsData)
 
@@ -17,6 +19,8 @@ export default function SpecialRequests (props) {
                 })
             })
         }
+        
+
 
 
         const checkBoxArray = checkBox.map(i => {
@@ -30,12 +34,19 @@ export default function SpecialRequests (props) {
 
     return(
         <>
-        <View style={styles.main}>
-        <Text style={styles.mainText}>Особые пожелания</Text>
-            {checkBoxArray}
+        
+            <EmptyCard content={<View style={styles.checkBoxArray}>{checkBoxArray}</View>}
+                       title={'Особые пожелания'}
+                       />
+            <EmptyCard title={'Информация'}
+                       content={<Text style={{color: colors.brown,
+                                              fontSize: 16,}}>{props.post.info}</Text>}/>
+
+            <EmptyCard title={'Пищевая ценность:'}
+                       content={ <Nutrients post={props.post}/> }/>
 
 
-        </View>
+
         </>
     )
     
@@ -45,20 +56,17 @@ export default function SpecialRequests (props) {
 
 
 const styles = StyleSheet.create({
-    main: {
-        position: 'relative',
-        paddingTop: 70,
+    checkBoxArray: {
         paddingBottom: 20,
         borderTopColor: colors.gray,
         borderBottomColor: colors.gray,
-        borderBottomWidth: 1,
-        borderTopWidth: 1,
-        height: 220,
+        height: 150,
         width: Dimensions.get('screen').width - 40,
         justifyContent: 'space-between',
         flexWrap: 'wrap',
         columnGap: 100,
     },
+
     mainText: {
         fontWeight: 900, 
         fontSize: 24, 

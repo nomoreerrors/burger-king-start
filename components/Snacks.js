@@ -1,7 +1,5 @@
-import { useEffect, useState , memo, useMemo} from "react";
 import { FlatList, ScrollView, View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import colors from "./colors";
-import SnacksData from "./SnacksData";
 
 
 
@@ -61,7 +59,8 @@ const styles = StyleSheet.create({
             flexDirection: 'column', 
             height: 500,
             flexWrap: 'wrap',
-            marginTop: 40
+            marginTop: 40,
+            marginRight: 30,
         },
     title: {
             maxWidth: 115,

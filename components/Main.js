@@ -6,8 +6,7 @@ import colors from "./colors"
 import MenuButtons from "./MenuButtons"
 import Banner from "./Banner"
 import Search from "./Search"
-import SnacksData from "./SnacksData"
-
+import SnacksData from "./data/SnacksData"
 
 
 
@@ -111,7 +110,6 @@ export default function Main () {
                             <View style={styles.header} >
                             <Text style={styles.headerText}>Меню</Text>
                             </View>
-
 
 
                         <FlatList   data={data}
