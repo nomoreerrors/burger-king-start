@@ -3,7 +3,7 @@ import colors from "./colors";
 
 
 
-export default function RedButtonBottomMenu (props) {
+export default function RedButtonRestaurantInfo (props) {
 
 
     return (

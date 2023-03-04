@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text,View,
 } from 'react-native';
 import Main from './Main';
+import Map from './Map';
 
 
 
@@ -17,6 +18,7 @@ function App () {
 
   return (
       <Main />
+      // <Map />
   )
   
 }

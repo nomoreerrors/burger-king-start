@@ -6,7 +6,9 @@ import colors from "./colors"
 import MenuButtons from "./MenuButtons"
 import Banner from "./Banner"
 import Search from "./Search"
+import { BackHandler } from "react-native"
 import SnacksData from "./data/SnacksData"
+import Header from "./Header"
 
 
 
@@ -33,10 +35,7 @@ export default function Main () {
             }
 
 
- 
-
-    
-
+  
         const renderHorizontalItem = ({item, index}) => {
                 if(item.header)
                 return <MenuButtons 
@@ -106,10 +105,8 @@ export default function Main () {
             
             <View style={{backgroundColor: colors.main}} >
                         <StatusBar backgroundColor={colors.brown}/>
-
-                            <View style={styles.header} >
-                            <Text style={styles.headerText}>Меню</Text>
-                            </View>
+                        <Header title={'Меню'} />
+                            
 
 
                         <FlatList   data={data}
@@ -142,19 +139,7 @@ const styles = StyleSheet.create({
             height: 100,
         },
 
-        header: {
-            backgroundColor: colors.brown,
-            height: 50,
-            zIndex: 3,
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-
-        headerText: {
-            color: colors.main,
-            fontSize: 24,
-            fontWeight: 700,
-        },
+       
 
       
        
