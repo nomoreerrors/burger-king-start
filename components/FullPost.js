@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, Modal, ScrollView, Touchable, TouchableOpacity, Dimensions } from "react-native";
-import getFetch from "./GetFetch";
-import { BackHandler } from "react-native";
 import colors from './colors'
 import Snacks from "./Snacks";
-import CloseButton from "./CloseButton";
 import FullPostInfo from "./FullPostInfo";
 import RedButtonRestaurantInfo from "./RedButtonRestaurantInfo";
 import Map from "./Map";
@@ -19,7 +16,6 @@ export default function FullPost ({post, onClose, isShown, snacks}) {
         setYandexMaps(!yandexMaps)
     }
 
-    // console.log(yandexMaps)
   
 
     return (

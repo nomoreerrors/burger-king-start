@@ -7,6 +7,11 @@ export default function NutrientsText({post, activeButton}) {
     const [nutrients, setNutrients] = useState()
     
 
+     
+
+
+
+
 
     useEffect(() => {
         setNutrients((nutrients => {

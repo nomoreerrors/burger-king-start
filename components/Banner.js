@@ -1,15 +1,17 @@
 import {React, useState} from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native'
+import CircleButton from './CircleButton'
 import colors from './colors'
+import DeliveryButton from './DeliveryButton'
 const {main, brown, yellow} = colors
-                        
+import KingClubLogin from './KingClubLogin'
 
 
 
 export default function Banner ({isActive}) {
-        const [deliveryButtonTap, setDeliveryButtonTap] = useState({
-                left: true,
-                right: false
+        const [deliveryButtonSelected, setDeliveryButtonSelected] = useState({
+                                                left: true,
+                                                right: false
         })
         const windowWidth = Dimensions.get('window').width * 0.9
         const ratio = 620 / 960;
@@ -18,142 +20,54 @@ export default function Banner ({isActive}) {
 
 
 
+        const setSelectedButton = (direction) => {
+                if(!deliveryButtonSelected[direction])
+                 setDeliveryButtonSelected(() => {
+                        return direction === 'right' ? {left: false, right: true}:
+                                                       {left: true, right: false}
+                })}
+        
+
+
+
+
+
     return (
 
                         
-                        <View style={styles.mainContainer} >
-                                <View style={[styles.buttonWrapper, {height: 110, marginTop: 20}]}>
-                                        <View style={styles.buttonDelivery}>
-
-                                                <TouchableOpacity style={[styles.buttonDeliveryMini,
-
-                                                
-                                                                        deliveryButtonTap.left ? 
-                                                                        {backgroundColor: main} : 
-                                                                        {backgroundColor: brown}
-                                                                        ]}
-                                                                       
-
-
-                                                                onPress={() => {
-                                                                        if(!deliveryButtonTap.left)setDeliveryButtonTap(
-                                                                        {left: true, right: false}
-                                                                                
-                                                                        )}
-                                                                } >
-                                                        
-                                                        <Text style={[{fontSize: 16,
-                                                                        fontWeight: 700},
-                                                                        deliveryButtonTap.left ?
-                                                                        {color: brown} : {color: main}] }>Доставка</Text>
-                                                </TouchableOpacity>
+                <View style={styles.mainContainer} >
+                                <View style={styles.buttonWrapper}>
+                                                <View style={styles.buttonDeliveryContainer}>
+                                                <DeliveryButton selected={deliveryButtonSelected.right}
+                                                                title={'Доставка'}
+                                                                onPress={() => setSelectedButton('right')}
+                                                                />
+                                                <DeliveryButton selected={deliveryButtonSelected.left}
+                                                                title={'В ресторане'}
+                                                                onPress={() => setSelectedButton('left')}/>
+                                                </View>
 
 
 
-                                                <TouchableOpacity style={[styles.buttonDeliveryMini,
-                                                                        {marginRight: 5},
-
-
-                                                                        deliveryButtonTap.right ? 
-                                                                        {backgroundColor: main} : 
-                                                                        {backgroundColor: brown}
-                                                                        ]}
-                                                                        
-
-
-
-                                                                        onPress={() => {
-                                                                                if(!deliveryButtonTap.right) setDeliveryButtonTap(
-                                                                                {left: false, right: true}
-                                                                                        
-                                                                        )}
-                                                        }>
-
-                                                        <Text style={[{fontSize: 16,
-                                                                        fontWeight: 700},
-                                                                        deliveryButtonTap.right ?
-                                                                        {color: brown} : {color: main}] }>Доставка</Text>
-                                                </TouchableOpacity>
+                                                <CircleButton title={'Выбрать ресторан'}
+                                                              flex={1}
+                                                              fontSize={16}/>
                                 </View>
 
 
+                               <KingClubLogin />
 
 
+                                <Image  source={require('./img/newBanner.jpg')}
+                                        style={[{ 
+                                                width: windowWidth,
+                                                flex: 4,
+                                                marginTop: 20,
+                                                height: imageWidth, 
+                                                borderRadius: 15 }]}
+                                        resizeMode='contain'>
+                                </Image>        
 
-
-
-                                        <View style={styles.circleButton}>
-                                                <Text style={{ fontSize: 16,
-                                                                color: main,
-                                                                fontWeight: 700, }}> Выбрать ресторан </Text>
-                                        </View>
-
-
-
-                {/* end of buttonWrapper          */}
-                </View>
-
-
-                                                                        
-
-
-
-
-
-                        <View style={[styles.buttonWrapper, {height: 70, flexDirection: 'row'}]}>
-
-                                        <Image source={require('./img/kingclub.png')}
-                                        style={{width: 60,
-                                                height: 60,
-                                                marginTop: 5,
-                                                marginLeft: 10}}></Image>
-                                                        
-
-                                        <Text style={{flex: 1, 
-                                                fontSize: 22,
-                                                fontWeight: 700,
-                                                marginTop: 5, 
-                                                marginLeft: 10,
-                                                color: brown}
-                                                }>
-                                                
-                                                Вступай в <Text style={{ color: yellow}}>King Club!</Text>
-                                        
-                                        </Text>
-
-
-                                        <TouchableOpacity  style={[styles.circleButton, { marginLeft: 40 }]}>
-
-                                                <Text style={{ fontSize: 22,
-                                                        color: main,
-                                                        fontWeight: 700, }}>Войти</Text>
-                                        </TouchableOpacity>
-                                                
-
-
-                        </View>
-                        {/* end of buttonWrapper          */}
-
-
-
-
-
-
-
-
-                        <Image  source={require('./img/newBanner.jpg')}
-                                style={[{ 
-                                        width: windowWidth,
-                                        height: imageWidth, 
-                                        borderRadius: 15 }]}
-                                resizeMode='contain'>
-                                
-                        </Image>        
-
-
-
-                        
-                        
 
                 </View>
 
@@ -195,10 +109,10 @@ const styles = StyleSheet.create({
         
 
         mainContainer: {
+            marginBottom: 20,
             backgroundColor: colors.main,
-            height: 540,
+            height: 500,
             flexDirection: 'column',
-            gap: 20,
             marginRight: 20,
             marginLeft: 20,
          },
@@ -206,38 +120,26 @@ const styles = StyleSheet.create({
         buttonWrapper: {
             backgroundColor: colors.mainLight,
             borderRadius: 10,
+            padding: 7,
+            rowGap: 5,
+            height: 110,
+            justifyContent: 'center',
+            marginTop: 15,
         },
 
-         buttonDelivery: {
-            flex: 1,
+         buttonDeliveryContainer: {
+            paddingBottom: 8,
+            flex: 0.6,
+            paddingTop: 8,
+            paddingLeft: 5,
+            paddingRight: 5,
             flexDirection: 'row',
-            marginTop: 10,
-            marginLeft: 10,
-            marginRight: 10,
+            columnGap: 5,
             borderRadius: 10,
             backgroundColor: colors.brown,
         },
-        circleButton: {
-            flex: 1,
-            marginTop: 10,
-            marginBottom: 10,
-            marginLeft: 10,
-            marginRight: 10,
-            borderRadius: 30,
-            backgroundColor: colors.brown,
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-        buttonDeliveryMini: {
-            flex: 1,
-            marginBottom: 5,
-            marginTop: 5,
-            marginLeft: 5,
-            borderRadius: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-
-        },
+       
+        
         menuTitle: {
             fontSize: 32,
             fontWeight: 700,
@@ -255,6 +157,9 @@ const styles = StyleSheet.create({
             marginBottom: 15,
             
 
-        }
+        },
+
+       
+        
 })
         
