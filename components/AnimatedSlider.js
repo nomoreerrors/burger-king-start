@@ -51,6 +51,7 @@ export default function AnimatedSlider(props) {
     return (
 
         <Animated.View style={[styles.main, {top: value,
+                                             padding: props.padding,
                                              height: props.height  }]}>
             <CloseButton right={5}
                          top={5}

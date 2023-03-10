@@ -43,6 +43,7 @@ export default function RestaurantInfoBottomSlider (props) {
     return (
          <AnimatedSlider isShown={props.isShown}
                          onClose={props.onClose}
+                         padding={20}
                          height={270}>
                             
                             <View style={{flex: 1, justifyContent: 'center'}}>

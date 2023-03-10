@@ -43,8 +43,7 @@ export default function FullPostInfo (props) {
                                               fontSize: 16,}}>{props.post.info}</Text>}/>
 
             <EmptyCard title={'Пищевая ценность:'}
-                       content={ <Nutrients post={props.post}/> }/>
-
+                       content={ <Nutrients post={props.post}/> }/> 
 
 
         </>

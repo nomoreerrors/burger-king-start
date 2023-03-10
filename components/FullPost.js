@@ -10,11 +10,14 @@ import Map from "./Map";
 export default function FullPost ({post, onClose, isShown, snacks}) {
     
     const [yandexMaps, setYandexMaps] = useState(false)
-    
-
+    const [showNutrients, setShowNutrients] = useState(false)
+    const [showSnacks, setShowShacks] = useState(false)
     const yandexMapsToggle = () => {
         setYandexMaps(!yandexMaps)
     }
+
+     
+
 
   
 
@@ -23,46 +26,56 @@ export default function FullPost ({post, onClose, isShown, snacks}) {
         
                                
                         
-                            <Modal  propagateSwipe={true}
-                                    onRequestClose={onClose}
-                                    animationType="slide"
-                                    transparent={true}
-                                    visible={isShown}>
-                            
-                                <ScrollView contentContainerStyle={styles.card}>
-                                        <TouchableOpacity activeOpacity={1}
-                                                        style={styles.wrapper}>
-                                                            
-                                                <View style={styles.background}></View>
-                                            
-                                                <Image style={styles.image}
-                                                    source={post.image}>
-                                                </Image>
-                                                
-                                                <Text style={styles.titleText}>{post.title}</Text>
-                                                
+            <Modal  propagateSwipe={true}
+                    onRequestClose={() => {
+                                onClose()
+                                setShowNutrients(false)
+                                setShowShacks(false)
+                    }}
+                    animationType="slide"
+                    transparent={true}
+                    visible={isShown}>
+                    
+                        <ScrollView contentContainerStyle={styles.card}
+                                    onLayout={event => setShowShacks(true)}
+                                    onScroll={event => {
+                                                    if(event.nativeEvent.contentOffset.y > 50)
+                                                    setShowNutrients(true)
+                                        }}>
 
-                                                <Snacks snacks={snacks}
-                                                        post={post}/>
-                                            
-                                                <FullPostInfo post={post}/>
-                                            
+                                    <TouchableOpacity activeOpacity={1}
+                                                    style={styles.wrapper}>
+                                                    
+                                        <View style={styles.background}></View>
+                                    
+                                        <Image style={styles.image}
+                                            source={post.image}>
+                                        </Image>
+                                        
+                                        <Text style={styles.titleText}>{post.title}</Text>
+                                        
 
-                                        </TouchableOpacity>
-                                </ScrollView>
+                                        {showSnacks && <Snacks snacks={snacks}
+                                                post={post}/> }
+                                    
+                                        {showNutrients && <FullPostInfo post={post}/> }
+                                    
 
-                                    <RedButtonRestaurantInfo title={'Выбрать ресторан'}
-                                                         post={post}
-                                                         maps={yandexMapsToggle}/>
+                                    </TouchableOpacity>
+                        </ScrollView>
+
+                                        <RedButtonRestaurantInfo title={'Выбрать ресторан'}
+                                                            post={post}
+                                                            maps={yandexMapsToggle}/>
 
 
-                       {yandexMaps && <Modal
-                                        animationType="fade"
-                                        onRequestClose={yandexMapsToggle}
-                                        visible={yandexMaps}>
-                                        <Map />
-                                      </Modal> }
-                    </Modal> 
+                                        {yandexMaps && <Modal
+                                                            animationType="fade"
+                                                            onRequestClose={yandexMapsToggle}
+                                                            visible={yandexMaps}>
+                                                            <Map />
+                                                        </Modal> }
+            </Modal> 
 
 
             
