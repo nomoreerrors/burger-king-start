@@ -1,5 +1,6 @@
 import { StyleSheet, View, Dimensions, TouchableOpacity, Text} from "react-native";
 import colors from "./colors";
+import RedButton from "./RedButton";
 
 
 
@@ -9,10 +10,8 @@ export default function RedButtonRestaurantInfo (props) {
     return (
 
         <View style={styles.redButtonWrapper}>
-                             <TouchableOpacity  onPress={props.maps}
-                                                style={styles.redButton}>
-                                <Text style={styles.redButtonText}>{props.title}</Text>
-                             </TouchableOpacity>
+                             <RedButton title={'Выбрать ресторан'}
+                                        onPress={props.maps}/>
                          </View>
     )
     
@@ -33,20 +32,5 @@ const styles = StyleSheet.create({
     
     },
 
-    redButton: {
-        width: Dimensions.get('screen').width * 0.9,
-        height: 60,
-        margin: 20,
-        backgroundColor: colors.red,
-        borderRadius: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-
-    },
-
-    redButtonText: {
-        color: colors.main,
-        fontSize: 22,
-        fontWeight: 900,
-    }
+   
 })

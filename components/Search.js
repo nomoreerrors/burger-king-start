@@ -6,18 +6,18 @@ import colors from "./colors"
 
 
 
-export default function Search () {
+export default function Search (props) {
 
 
 
-return  <View style={{
-    backgroundColor: colors.brown,
-    width: Dimensions.get('window').width,
-    }} >
+return  <View style={styles.container} >
 
-    <TextInput style={styles.textInput}></TextInput>
+        <TextInput style={styles.textInput}></TextInput>
+
+        {props.filterButton && 
+        <View style={{flex: 1}}>{props.filterButton}</View>}
     
-    </View> 
+        </View> 
 
 
 }
@@ -33,8 +33,16 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginRight: 20,
         height: 40,
-        marginBottom: 15,
+        flex: 4,
         
 
     },
+
+    container: {
+        backgroundColor: colors.brown,
+        width: Dimensions.get('window').width,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingBottom: 8,
+    }
 })

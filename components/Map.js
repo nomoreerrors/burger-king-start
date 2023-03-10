@@ -1,13 +1,12 @@
 import { YaMap,Marker, Circle } from "react-native-yamap";
 import { Dimensions, TouchableOpacity, View, Modal } from "react-native";
 import { useEffect, useCallback, useMemo, useState } from "react";
-import coordinatesOfCafee from "./data/coordinatesOfCafee";
-import colors from "./colors";
-import CloseButton from "./CloseButton";
+import coordinatesOfCafe from "./data/coordinatesOfCafe";
 import Header from "./Header";
 import Search from "./Search";
 import RestaurantInfoBottomSlider from "./RestaurantInfoBottomSlider";
-import { BackHandler } from "react-native";
+import FilterRestaurantButton from "./FilterRestaurantButton";
+import FilterRestaurantCard from "./FilterRestaurantCard";
 
 
 
@@ -15,8 +14,10 @@ import { BackHandler } from "react-native";
 
   export default function Map(props) {
     const [scale, setScale] = useState(0)
+    const [cafeData, setCafeData] = useState(coordinatesOfCafe)
     const [bottomSliderInfo, setBottomSliderInfo] = useState('')
     const [visible, setVisible] = useState(false)
+    const [bottomSliderToggle, setBottomSliderToggle] = useState(false)
     const [coordinates, setCoordinates] = useState({
                     lat: 55.75399399999374,
                     lon: 37.62209300000001,
@@ -29,25 +30,48 @@ import { BackHandler } from "react-native";
 
 
 
+
     useEffect(() => {
-        setScale(() => 1)
-    }, [])
+        setScale(() => {
+          if(scale === 1) return 0.9
+          else return 1
+        })
+    }, [cafeData])
     
-    // useEffect(() => {
-    //     BackHandler.addEventListener("hardwareBackPress", () => console.log('lol'))
-    // }, [])
+    
 
 
-    const selectedObject = (object) => {
+    const scaleToObjectCoordinates = (object) => {
           setCoordinates({...object.coordinates, zoom: 14})
           setBottomSliderInfo(object)
+          setBottomSliderToggle(true)
     }
+    
 
 
+    const setFilteredSettings = (object) => {
+        if(object === []) setCafeData(() => coordinatesOfCafe)
+        else { setCafeData(() => {
+                    const a = []
+                    coordinatesOfCafe.forEach(cafe => {
+                    if(object.every(setting => cafe.service.includes(setting))) {
+                    a.push(cafe)
+                }})
+                return a 
+              }
+                
+        )}
+      }
+              
+        
+    
+           
+    
 
-    const markerArray = coordinatesOfCafee.map((i, index) => {
+
+    const markerArray = cafeData.map((i, index) => {
                    return  <Marker point={i.coordinates}
-                                   onPress={() => selectedObject(i)}
+                                   onPress={() => scaleToObjectCoordinates(i)}
                                    source={require('./img/logo/map-marker.png')}
                                    key={index.toString()}
                                    scale={scale}
@@ -62,15 +86,31 @@ import { BackHandler } from "react-native";
       <>
 
  
-      <Header title={"Выбрать ресторан"} />
-      <Search />
+      <Header                 title={"Выбрать ресторан"} />
+
+      <Search                 filterButton={<FilterRestaurantButton 
+                                              visible={(object) => {
+                                                  setVisible(true)
+                                            }}
+                                            />}
+                          />
       
-      <YaMap  initialRegion={coordinates}
-              style={{ height: dimensions.height, width: dimensions.width}}
-              >
-        {markerArray}
+      <YaMap                      initialRegion={coordinates}
+                                  style={{ height: dimensions.height, width: dimensions.width}}
+                                  >
+                                {markerArray}
       </YaMap>
-      <RestaurantInfoBottomSlider info={bottomSliderInfo}/>
+
+
+      <RestaurantInfoBottomSlider info={bottomSliderInfo}
+                                  onClose={() => setBottomSliderToggle(false)}
+                                  visible={bottomSliderToggle}/>
+
+
+      <FilterRestaurantCard       visible={visible}
+                                  setFiltered={(object) => setFilteredSettings(object)}
+                                  onClose={() => setVisible(false)}
+                                  />
 
       </>
     )

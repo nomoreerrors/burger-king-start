@@ -13,11 +13,12 @@ export default function CheckBox (props) {
 
     return (
                      <View style={styles.itemWrapper}>
-                        <TouchableOpacity style={styles.box}
+                        <TouchableOpacity style={props.size === 2 ? styles.box2 : styles.box}
                                           onPress={props.onPress}
-                                          activeOpacity={0.8}
+                                          activeOpacity={1}
                                            >
-                            {props.selected && <Image style={styles.image}
+                            {props.selected && <Image style={props.size === 2 ?
+                                                             styles.image2 : styles.image}
                                                     source={require('./img/tools/checkmark.png')}>
                                                 </Image>}
                         </TouchableOpacity>
@@ -46,6 +47,16 @@ const styles = StyleSheet.create({
 
     },
 
+    box2: {
+        height: 40,
+        width: 40,
+        backgroundColor: colors.mainLight,
+        borderRadius: 8,
+        borderColor: colors.gray,
+        borderWidth: 1,
+
+    },
+
 
 
     itemWrapper: {
@@ -62,7 +73,13 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: - 10,
         opacity: 0.9
-    
+    },
+    image2: {
+        height: 45,
+        width: 45,
+        position: 'absolute',
+        top: - 10,
+        opacity: 0.9
     }
   
 

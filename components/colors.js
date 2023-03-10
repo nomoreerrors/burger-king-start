@@ -7,7 +7,8 @@
     yellow: 'rgb(237, 178, 62)',
     black: 'rgb(30, 30, 30)',
     red: 'rgb(215, 35, 0)',
-    transparent: 'rgba(0, 0, 0, 0)'
+    transparent: 'rgba(0, 0, 0, 0)',
+    white: 'rgb(230, 230, 230)'
 
  }
 

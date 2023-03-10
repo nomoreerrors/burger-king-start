@@ -11,9 +11,10 @@ export default function CloseButton (props) {
                 onPress={props.onClose}>
                 <Text style={{color: colors.black, 
                              fontSize: 20,
-                             position: 'relative',
-                            //  top: props.position.top,
-                            //  left: props.position.left
+                             top: props.top,
+                             right: props.right,
+                             left: props.left,
+                             position: 'absolute',
                              }}>
                     X
                 </Text>

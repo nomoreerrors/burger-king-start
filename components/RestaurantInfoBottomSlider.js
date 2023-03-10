@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Modal, Image } from "react-native";
 import { Dimensions } from "react-native";
-import CloseButton from "./CloseButton";
 import colors from "./colors";
-import { BackHandler } from "react-native";
+import Icons from "./Icons";
 import CircleButton from "./CircleButton";
 
 
@@ -17,20 +16,16 @@ import CircleButton from "./CircleButton";
 
 export default function RestaurantInfoBottomSlider (props) {
 
-    const [visible, setVisible] = useState(false)
     const [workingHours, setWorkingHours] = useState(null)
 
-    useEffect(() => {
-        if(props.info !== '' && !visible)
-        setVisible(true) 
-    }, [props])
-    console.log(visible)
+   
+  
 
-
+    
 
 
     useEffect(() => {
-        if(visible) {
+        if(props.visible) {
             setWorkingHours(() => {
                 const date = new Date()
                 const hours = Number(date.getHours())
@@ -39,7 +34,7 @@ export default function RestaurantInfoBottomSlider (props) {
                         else return `Закроется в ${props.info.close}`
                         })
                         }
-    }, [visible])
+    }, [props.visible])
     
                    
    
@@ -49,9 +44,9 @@ export default function RestaurantInfoBottomSlider (props) {
 
     return (
         <Modal animationType="slide"
-               onRequestClose={() => setVisible(false)}
+               onRequestClose={() => props.onClose()}
                transparent={true}
-               visible={visible}>
+               visible={props.visible}>
                 <View style={styles.main}>
                             <View style={{flex: 1, justifyContent: 'center'}}>
                                     <Text style={styles.adress}>{props.info.adress}</Text>
@@ -61,31 +56,22 @@ export default function RestaurantInfoBottomSlider (props) {
                                     <Text style={styles.phone}>Телефон: {props.info.phone}</Text>
                                     </View>
                             </View>
-                    <View style={styles.items}>
-
-                            <View style={styles.info}>
-
-                                    
-
-                                    <View style={styles.textWrapper}>
-                                    <Image source={require('./img/logo/watch.png')}
-                                        style={styles.image}></Image>
-                                    <Text style={styles.workingHours}>{workingHours}</Text>
+                            <View style={styles.items}>
+                                    <View style={styles.info}>
+                                            <View style={styles.textWrapper}>
+                                            <Image source={require('./img/logo/watch.png')}
+                                                style={styles.image}></Image>
+                                            <Text style={styles.workingHours}>{workingHours}</Text>
+                                            </View>
                                     </View>
-
-                            </View>
                                     <CircleButton width={Dimensions.get('screen').width / 2.5}
-                                                  fontSize={15}
-                                                  title={'Заказать здесь'}/>
-                    </View>
+                                                fontSize={15}
+                                                title={'Заказать здесь'}/>
+                            </View>
 
-
-                    <View style={styles.bottomItems}>
-
-
-                    </View>
-
-
+                            <View style={styles.bottomItems}>
+                            <Icons />
+                            </View>
                </View>
                 
         </Modal>
@@ -146,8 +132,8 @@ const styles = StyleSheet.create({
     },
 
     bottomItems: {
-        backgroundColor: 'purple',
         flex: 1.5,
+        justifyContent: 'center',
     }
     
     
