@@ -7,6 +7,7 @@ import Search from "./Search";
 import RestaurantInfoBottomSlider from "./RestaurantInfoBottomSlider";
 import FilterRestaurantButton from "./FilterRestaurantButton";
 import FilterRestaurantCard from "./FilterRestaurantCard";
+import AnimatedSlider from "./AnimatedSlider";
 
 
 
@@ -16,8 +17,8 @@ import FilterRestaurantCard from "./FilterRestaurantCard";
     const [scale, setScale] = useState(0)
     const [cafeData, setCafeData] = useState(coordinatesOfCafe)
     const [bottomSliderInfo, setBottomSliderInfo] = useState('')
-    const [visible, setVisible] = useState(false)
     const [bottomSliderToggle, setBottomSliderToggle] = useState(false)
+    const [visible, setVisible] = useState(false)
     const [coordinates, setCoordinates] = useState({
                     lat: 55.75399399999374,
                     lon: 37.62209300000001,
@@ -26,7 +27,6 @@ import FilterRestaurantCard from "./FilterRestaurantCard";
 
                   
     const dimensions = Dimensions.get('screen')
-
 
 
 
@@ -79,7 +79,7 @@ import FilterRestaurantCard from "./FilterRestaurantCard";
             })
 
 
-
+console.log(bottomSliderToggle)
    
    
     return (
@@ -93,7 +93,7 @@ import FilterRestaurantCard from "./FilterRestaurantCard";
                                                   setVisible(true)
                                             }}
                                             />}
-                          />
+                                    />
       
       <YaMap                      initialRegion={coordinates}
                                   style={{ height: dimensions.height, width: dimensions.width}}
@@ -102,11 +102,12 @@ import FilterRestaurantCard from "./FilterRestaurantCard";
       </YaMap>
 
 
-      <RestaurantInfoBottomSlider info={bottomSliderInfo}
-                                  onClose={() => setBottomSliderToggle(false)}
-                                  visible={bottomSliderToggle}/>
-
-
+      <RestaurantInfoBottomSlider  info={bottomSliderInfo}
+                                   onClose={() => setBottomSliderToggle(false)}
+                                   isShown={bottomSliderToggle}
+                                  />
+      
+                                
       <FilterRestaurantCard       visible={visible}
                                   setFiltered={(object) => setFilteredSettings(object)}
                                   onClose={() => setVisible(false)}

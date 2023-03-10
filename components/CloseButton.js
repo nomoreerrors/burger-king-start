@@ -7,14 +7,17 @@ import colors from "./colors"
 export default function CloseButton (props) {
 
     return (
-        <TouchableOpacity 
-                onPress={props.onClose}>
-                <Text style={{color: colors.black, 
-                             fontSize: 20,
-                             top: props.top,
-                             right: props.right,
-                             left: props.left,
-                             position: 'absolute',
+        <TouchableOpacity    onPress={props.onClose}
+                             style={{padding: 10,
+                                    position: 'absolute',
+                                    top: props.top,
+                                    width: 40,
+                                    height: 60,
+                                    right: props.right,
+                                    left: props.left,}}
+                               >
+                <Text style={{color: colors.gray, 
+                             fontSize: 30,
                              }}>
                     X
                 </Text>

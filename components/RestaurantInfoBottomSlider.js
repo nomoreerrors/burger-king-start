@@ -4,14 +4,13 @@ import { Dimensions } from "react-native";
 import colors from "./colors";
 import Icons from "./Icons";
 import CircleButton from "./CircleButton";
+import AnimatedSlider from "./AnimatedSlider";
+import CloseButton from "./CloseButton";
 
 
 
 
-                    // const minutes = Number(date.getMinutes())
-                    // const openMinutes = Number(props.info.open.split(':')[1])
-                    // const closeMinutes = Number(props.info.close.split(':')[1])
-                    // const closeHours = Number(props.info.close.split(':')[0])
+                    
 
 
 export default function RestaurantInfoBottomSlider (props) {
@@ -19,35 +18,33 @@ export default function RestaurantInfoBottomSlider (props) {
     const [workingHours, setWorkingHours] = useState(null)
 
    
-  
+    
 
     
 
 
     useEffect(() => {
-        if(props.visible) {
+        if(props.isShown) {
             setWorkingHours(() => {
                 const date = new Date()
                 const hours = Number(date.getHours())
-                const openHours = Number(props.info.open.split(':')[0])
+                let openHours = Number(props.info.open.split(':')[0])
                         if(hours < openHours) return `Откроется в ${props.info.open}`
                         else return `Закроется в ${props.info.close}`
                         })
                         }
-    }, [props.visible])
+        }, [props.info])
     
                    
    
 
 
 
-
     return (
-        <Modal animationType="slide"
-               onRequestClose={() => props.onClose()}
-               transparent={true}
-               visible={props.visible}>
-                <View style={styles.main}>
+         <AnimatedSlider isShown={props.isShown}
+                         onClose={props.onClose}
+                         height={270}>
+                            
                             <View style={{flex: 1, justifyContent: 'center'}}>
                                     <Text style={styles.adress}>{props.info.adress}</Text>
                                     <View style={styles.textWrapper}>
@@ -72,9 +69,9 @@ export default function RestaurantInfoBottomSlider (props) {
                             <View style={styles.bottomItems}>
                             <Icons />
                             </View>
-               </View>
+                            
                 
-        </Modal>
+            </AnimatedSlider>
     )
     
 }
