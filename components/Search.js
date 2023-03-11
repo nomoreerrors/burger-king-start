@@ -1,5 +1,7 @@
-import { View, Text, TextInput, Dimensions, StyleSheet } from "react-native"
+import { useState } from "react"
+import { View, Text, TextInput, Dimensions, StyleSheet,Modal, FlatList } from "react-native"
 import colors from "./colors"
+// import BurgerStyle from "./BurgerStyle"
 
 
 
@@ -7,17 +9,49 @@ import colors from "./colors"
 
 
 export default function Search (props) {
+    const [input, setInput] = useState('')
+    const [visible, setVisible] = useState(false)
 
-
-
-return  <View style={styles.container} >
-
-        <TextInput style={styles.textInput}></TextInput>
-
-        {props.filterButton && 
-        <View style={{flex: 1}}>{props.filterButton}</View>}
+ 
+        
     
-        </View> 
+
+
+
+
+
+return  <View>
+                            <View style={styles.container}>
+                                <TextInput  
+                                    onFocus={() => setVisible(true)}
+                                    style={styles.textInput}>
+                                </TextInput>
+
+                                {props.filterButton &&  <View style={{flex: 1}}>
+                                                        {props.filterButton}
+                                                        </View>}
+                            </View> 
+
+
+
+
+ 
+
+                    {/* <Modal 
+                            onRequestClose={() => setVisible(false)}
+                            visible={visible}>
+                        
+                        <FlatList data={props.data}
+                                 renderItem={renderItem}>
+
+                        </FlatList>
+
+                    </Modal>  */}
+
+
+            
+
+        </View>
 
 
 }

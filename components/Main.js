@@ -1,7 +1,7 @@
 import { useRef, React, useEffect, useState, useCallback, } from "react"
 import { FlatList, View, Text, StyleSheet, TouchableOpacity, TextInput, StatusBar, Image, ScrollView, Button } from "react-native"
 import burgerData from "./data/data"
-import BurgerStyle from "./BurgerStyle"
+import FlatListMenu from "./FlatListMenu"
 import colors from "./colors"
 import MenuButtons from "./MenuButtons"
 import Banner from "./Banner"
@@ -9,6 +9,7 @@ import Search from "./Search"
 import { BackHandler } from "react-native"
 import SnacksData from "./data/SnacksData"
 import Header from "./Header"
+import FlatListItemStyle from "./FlatListItemStyle"
 
 
 
@@ -20,12 +21,14 @@ export default function Main () {
 
         const [data, setData] = useState(() => burgerData)
         const [snacks, setSnacks] = useState(SnacksData)
+        const [isShown, setIsShown] = useState(false)
         const [activeMenuButton, setActiveMenuButton] = useState(() => data.filter(i => i.header).map(
                                                         i => i.isActive))
 
 
         const horizontalFlatlistRef = useRef(null)
         const verticalFlatListRef = useRef(null)
+        const searchRef = useRef([])
 
 
 
@@ -48,11 +51,30 @@ export default function Main () {
                     }
 
 
+        const a = []
+        const searchItem = ({item}) => {
+              if(item.menu) {
+                item.menu.forEach(i => {
+                    if(i.title.includes('Чиз')) {
+                        a.push( <FlatListItemStyle post={i}
+                                                   onPress={() => setIsShown(true)}
+                                                   isShown={isShown}
+                                                   snacks={snacks}/> )
+                         }})
+                        return a
+                        }}
+          
+                                    
+
+                
+                
+                                
+
 
 
 
        
-        const renderItem = ({item, index}) => {
+        const renderItem = ({item}) => {
             return <View>
                         {item.id === 1 && <Banner />  }
                         {item.id === 2 &&  <FlatList 
@@ -67,8 +89,8 @@ export default function Main () {
                                             <Text style={styles.menuHeaderText}>
                                             {item.header}
                                             </Text>
-                                            <BurgerStyle menu={item.menu}
-                                                         snacks={snacks}/>
+                                            <FlatListMenu menu={item.menu}
+                                                          snacks={snacks}/>
                                         </View>                       }
                 </View>
         }
@@ -109,15 +131,15 @@ export default function Main () {
                             
 
 
-                        <FlatList   data={data}
-                                    viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current }
+                        <FlatList   data={burgerData}
+                                    // viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current }
                                     ref={verticalFlatListRef}
                                     style={{marginBottom: 50, zIndex: 0}}
                                     keyExtractor={item => item.id}
-                                    renderItem={renderItem}
+                                    renderItem={searchItem}
                                     stickyHeaderHiddenOnScroll={false}
                                     stickyHeaderIndices={[0, 2]}
-                                    ListHeaderComponent={ <Search /> }
+                                    ListHeaderComponent={ <Search data={burgerData}/> }
                                     initialNumToRender={7}
                                      >
                                     

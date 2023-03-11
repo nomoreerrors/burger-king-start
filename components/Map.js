@@ -7,8 +7,7 @@ import Search from "./Search";
 import RestaurantInfoBottomSlider from "./RestaurantInfoBottomSlider";
 import FilterRestaurantButton from "./FilterRestaurantButton";
 import FilterRestaurantCard from "./FilterRestaurantCard";
-import AnimatedSlider from "./AnimatedSlider";
-
+ 
 
 
 
@@ -18,6 +17,7 @@ import AnimatedSlider from "./AnimatedSlider";
     const [cafeData, setCafeData] = useState(coordinatesOfCafe)
     const [bottomSliderInfo, setBottomSliderInfo] = useState('')
     const [bottomSliderToggle, setBottomSliderToggle] = useState(false)
+    const [showMarkers, setShowMarkers] = useState(false)
     const [visible, setVisible] = useState(false)
     const [coordinates, setCoordinates] = useState({
                     lat: 55.75399399999374,
@@ -33,41 +33,38 @@ import AnimatedSlider from "./AnimatedSlider";
 
     useEffect(() => {
         setScale(() => {
-          if(scale === 1) return 0.9
-          else return 1
-        })
-    }, [cafeData])
+            if(scale === 1) return 0.9
+               else return 1
+                  })
+                    }, [cafeData, showMarkers])
     
     
 
 
     const scaleToObjectCoordinates = (object) => {
           setCoordinates({...object.coordinates, zoom: 14})
-          setBottomSliderInfo(object)
-          setBottomSliderToggle(true)
+              setBottomSliderInfo(object)
+                  setBottomSliderToggle(true)
     }
     
 
 
     const setFilteredSettings = (object) => {
-        if(object === []) setCafeData(() => coordinatesOfCafe)
-        else { setCafeData(() => {
-                    const a = []
-                    coordinatesOfCafe.forEach(cafe => {
-                    if(object.every(setting => cafe.service.includes(setting))) {
-                    a.push(cafe)
-                }})
-                return a 
+          if(object === []) setCafeData(() => coordinatesOfCafe)
+            else setCafeData(() => {
+                const a = []
+                  coordinatesOfCafe.forEach(cafe => {
+                      if(object.every(setting => cafe.service.includes(setting))) {
+                          a.push(cafe)
+                              }})
+                                  return a 
               }
-                
-        )}
+        )
       }
               
+      //rfc - готовый компонент!!!
+      //clg console.log
         
-    
-           
-    
-
 
     const markerArray = cafeData.map((i, index) => {
                    return  <Marker point={i.coordinates}
@@ -79,33 +76,28 @@ import AnimatedSlider from "./AnimatedSlider";
             })
 
 
-console.log(bottomSliderToggle)
    
    
     return (
-      <>
+      <View onLayout={() => setShowMarkers(true)}>
 
  
-      <Header                 title={"Выбрать ресторан"} />
+      <Header                     title={"Выбрать ресторан"} />
+      <Search                     filterButton={<FilterRestaurantButton 
+                                                       visible={(object) => {
+                                                       setVisible(true)
+                                            }}/> } />
 
-      <Search                 filterButton={<FilterRestaurantButton 
-                                              visible={(object) => {
-                                                  setVisible(true)
-                                            }}
-                                            />}
-                                    />
-      
       <YaMap                      initialRegion={coordinates}
-                                  style={{ height: dimensions.height, width: dimensions.width}}
-                                  >
-                                {markerArray}
-      </YaMap>
+                                  style={{ height: dimensions.height, width: dimensions.width}}>
+                                  {showMarkers && markerArray}
+                                  </YaMap>
 
 
       <RestaurantInfoBottomSlider  info={bottomSliderInfo}
                                    onClose={() => setBottomSliderToggle(false)}
                                    isShown={bottomSliderToggle}
-                                  />
+                                   />
       
                                 
       <FilterRestaurantCard       visible={visible}
@@ -113,7 +105,7 @@ console.log(bottomSliderToggle)
                                   onClose={() => setVisible(false)}
                                   />
 
-      </>
+      </View>
     )
   }
 

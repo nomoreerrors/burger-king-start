@@ -13,9 +13,9 @@ export default function FullPostInfo (props) {
         const [checkBox, setCheckBox] = useState(() => SpecialRequestsData)
 
         const setSelectedItems = (id) => {
-            setCheckBox(checkBox => {
-                return checkBox.map(i => {
-                   return i.id === id ? {...i, selected: !i.selected} : i
+                  setCheckBox(checkBox => {
+                    return checkBox.map(i => {
+                         return i.id === id ? {...i, selected: !i.selected} : i
                 })
             })
         }

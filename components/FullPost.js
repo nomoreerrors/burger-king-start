@@ -5,6 +5,7 @@ import Snacks from "./Snacks";
 import FullPostInfo from "./FullPostInfo";
 import RedButtonRestaurantInfo from "./RedButtonRestaurantInfo";
 import Map from "./Map";
+import FadeInAnimation from "./FadeInAnimation";
 
 
 export default function FullPost ({post, onClose, isShown, snacks}) {
@@ -13,10 +14,9 @@ export default function FullPost ({post, onClose, isShown, snacks}) {
     const [showNutrients, setShowNutrients] = useState(false)
     const [showSnacks, setShowShacks] = useState(false)
     const yandexMapsToggle = () => {
-        setYandexMaps(!yandexMaps)
+            setYandexMaps(!yandexMaps)
     }
 
-     
 
 
   
@@ -39,42 +39,52 @@ export default function FullPost ({post, onClose, isShown, snacks}) {
                         <ScrollView contentContainerStyle={styles.card}
                                     onLayout={event => setShowShacks(true)}
                                     onScroll={event => {
-                                                    if(event.nativeEvent.contentOffset.y > 50)
-                                                    setShowNutrients(true)
+                                                       if(event.nativeEvent.contentOffset.y > 50)
+                                                       setShowNutrients(true)
                                         }}>
 
                                     <TouchableOpacity activeOpacity={1}
                                                     style={styles.wrapper}>
                                                     
                                         <View style={styles.background}></View>
-                                    
                                         <Image style={styles.image}
-                                            source={post.image}>
+                                               source={post.image}>
                                         </Image>
-                                        
                                         <Text style={styles.titleText}>{post.title}</Text>
                                         
 
-                                        {showSnacks && <Snacks snacks={snacks}
-                                                post={post}/> }
+
+
+                                        {showSnacks &&
+                                        <FadeInAnimation height={600}>
+                                        <Snacks snacks={snacks}
+                                                post={post}/> 
+                                        </FadeInAnimation>  }
+
+
                                     
-                                        {showNutrients && <FullPostInfo post={post}/> }
+                                        {showNutrients && 
+                                        <FadeInAnimation height={400}>
+                                        <FullPostInfo post={post}/> 
+                                        </FadeInAnimation>
+                                        }
                                     
 
                                     </TouchableOpacity>
                         </ScrollView>
 
                                         <RedButtonRestaurantInfo title={'Выбрать ресторан'}
-                                                            post={post}
-                                                            maps={yandexMapsToggle}/>
+                                                                 post={post}
+                                                                 maps={yandexMapsToggle}/>
 
 
-                                        {yandexMaps && <Modal
-                                                            animationType="fade"
-                                                            onRequestClose={yandexMapsToggle}
-                                                            visible={yandexMaps}>
-                                                            <Map />
-                                                        </Modal> }
+                                        {yandexMaps && 
+                                        <Modal
+                                            animationType="fade"
+                                            onRequestClose={yandexMapsToggle}
+                                            visible={yandexMaps}>
+                                        <Map />
+                                        </Modal> }
             </Modal> 
 
 
@@ -92,13 +102,11 @@ const styles = StyleSheet.create({
              backgroundColor: colors.main,
              borderTopRightRadius: 30,
              borderTopLeftRadius: 30,
-             alignItems: 'center',
              height: 1800,
 
              
         },
         wrapper: {
-            height: 1700,
             alignItems: 'center',
         },
 
