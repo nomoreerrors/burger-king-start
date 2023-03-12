@@ -66,18 +66,19 @@ export default function Main () {
         const searchItemRender = ({item, index}) => {
               if(item.menu) {
                 item.menu.forEach(i => {
-                    if(i.title.includes('Чиз')) {
+                    if(i.title.toLowerCase().includes(input.toLowerCase())) {
                         a.push( <FlatListItemStyle post={i}
                                                    key={i.id + index * item.id}
                                                    onPress={() => fullPostHandler(i)}
                                                    /> )
                          }})
                         return a
-                        }}
+                        }
+                    }
           
                                     
 
-                
+                console.log(input)
                 
                                 
 
@@ -141,6 +142,13 @@ export default function Main () {
                         <StatusBar backgroundColor={colors.brown}/>
                         <Header title={'Меню'} />
 
+                        <Search>
+                            <TextInput  onChangeText={value => setInput(value)}
+                                        // onFocus={() => setVisible(true)}
+                                        value={input}
+                                        style={styles.textInput}></TextInput>
+                        </Search>
+
                         <FullPost   snacks={snacks}
                                     isShown={isShown}
                                     onClose={() => setIsShown(false)}
@@ -152,7 +160,7 @@ export default function Main () {
                                     ref={verticalFlatListRef}
                                     style={{marginBottom: 50, zIndex: 0}}
                                     keyExtractor={item => item.id}
-                                    renderItem={renderItem}
+                                    renderItem={input ? searchItemRender : renderItem}
                                     stickyHeaderHiddenOnScroll={false}
                                     stickyHeaderIndices={[0, 2]}
                                     ListHeaderComponent={ <Search data={burgerData}
@@ -248,7 +256,18 @@ const styles = StyleSheet.create({
             height: 130
         },
 
-       
+        textInput: {
+            backgroundColor: colors.brownLight,
+            color: colors.main,
+            fontSize: 20,
+            borderRadius: 15,
+            marginLeft: 20,
+            marginRight: 20,
+            height: 40,
+            flex: 4,
+            
+    
+        },
         
 
 })

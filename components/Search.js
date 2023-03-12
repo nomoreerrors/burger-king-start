@@ -16,17 +16,13 @@ export default function Search (props) {
         
     
 
-    console.log(input)
 
 
 
 return  <View>
         <View style={styles.container} >
 
-                <TextInput  onChangeText={value => setInput(value)}
-                                    onFocus={() => setVisible(true)}
-                            value={input}
-                            style={styles.textInput}></TextInput>
+                {props.children}
 
                 {props.filterButton && 
                 <View style={{flex: 1}}>{props.filterButton}</View>}
