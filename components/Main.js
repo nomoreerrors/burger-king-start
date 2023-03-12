@@ -10,6 +10,7 @@ import { BackHandler } from "react-native"
 import SnacksData from "./data/SnacksData"
 import Header from "./Header"
 import FlatListItemStyle from "./FlatListItemStyle"
+import FullPost from "./FullPost"
 
 
 
@@ -22,19 +23,20 @@ export default function Main () {
         const [data, setData] = useState(() => burgerData)
         const [snacks, setSnacks] = useState(SnacksData)
         const [isShown, setIsShown] = useState(false)
+        const [input, setInput] = useState('')
+        const [selectedItem, setSelectedItem] = useState(0)
         const [activeMenuButton, setActiveMenuButton] = useState(() => data.filter(i => i.header).map(
                                                         i => i.isActive))
 
 
         const horizontalFlatlistRef = useRef(null)
         const verticalFlatListRef = useRef(null)
-        const searchRef = useRef([])
 
 
 
         const verticalScroll = (id) => {
                 verticalFlatListRef.current.scrollToIndex({index: id - 1,
-                                                        viewOffset: 200 }) 
+                                                          viewOffset: 200 }) 
             }
 
 
@@ -51,15 +53,24 @@ export default function Main () {
                     }
 
 
+
+
+        const fullPostHandler = (i) => {
+              setSelectedItem(i)
+              setIsShown(true)
+        }
+
+
+
         const a = []
-        const searchItem = ({item}) => {
+        const searchItemRender = ({item, index}) => {
               if(item.menu) {
                 item.menu.forEach(i => {
                     if(i.title.includes('Чиз')) {
                         a.push( <FlatListItemStyle post={i}
-                                                   onPress={() => setIsShown(true)}
-                                                   isShown={isShown}
-                                                   snacks={snacks}/> )
+                                                   key={i.id + index * item.id}
+                                                   onPress={() => fullPostHandler(i)}
+                                                   /> )
                          }})
                         return a
                         }}
@@ -90,6 +101,7 @@ export default function Main () {
                                             {item.header}
                                             </Text>
                                             <FlatListMenu menu={item.menu}
+                                                          onPress={(i) => fullPostHandler(i)}
                                                           snacks={snacks}/>
                                         </View>                       }
                 </View>
@@ -128,7 +140,11 @@ export default function Main () {
             <View style={{backgroundColor: colors.main}} >
                         <StatusBar backgroundColor={colors.brown}/>
                         <Header title={'Меню'} />
-                            
+
+                        <FullPost   snacks={snacks}
+                                    isShown={isShown}
+                                    onClose={() => setIsShown(false)}
+                                    post={selectedItem}/>
 
 
                         <FlatList   data={burgerData}
@@ -136,10 +152,11 @@ export default function Main () {
                                     ref={verticalFlatListRef}
                                     style={{marginBottom: 50, zIndex: 0}}
                                     keyExtractor={item => item.id}
-                                    renderItem={searchItem}
+                                    renderItem={renderItem}
                                     stickyHeaderHiddenOnScroll={false}
                                     stickyHeaderIndices={[0, 2]}
-                                    ListHeaderComponent={ <Search data={burgerData}/> }
+                                    ListHeaderComponent={ <Search data={burgerData}
+                                                                  /> }
                                     initialNumToRender={7}
                                      >
                                     

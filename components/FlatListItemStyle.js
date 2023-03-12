@@ -5,7 +5,7 @@ import FullPost from './FullPost'
 
 
 
-export default function FlatListItemStyle({post, onPress, snacks, isShown}) {
+export default function FlatListItemStyle({post, onPress}) {
   return (
          <>
             <TouchableOpacity  
@@ -21,9 +21,7 @@ export default function FlatListItemStyle({post, onPress, snacks, isShown}) {
                             </View>
                 </TouchableOpacity>
 
-                {isShown && <FullPost   snacks={snacks}
-                                        isShown={isShown}
-                                        post={post}/> }
+                
 
             </>
   )

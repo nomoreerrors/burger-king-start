@@ -16,16 +16,20 @@ export default function Search (props) {
         
     
 
-
+    console.log(input)
 
 
 
 return  <View>
-                            <View style={styles.container}>
-                                <TextInput  
+        <View style={styles.container} >
+
+                <TextInput  onChangeText={value => setInput(value)}
                                     onFocus={() => setVisible(true)}
-                                    style={styles.textInput}>
-                                </TextInput>
+                            value={input}
+                            style={styles.textInput}></TextInput>
+
+                {props.filterButton && 
+                <View style={{flex: 1}}>{props.filterButton}</View>}
 
                                 {props.filterButton &&  <View style={{flex: 1}}>
                                                         {props.filterButton}
@@ -35,19 +39,7 @@ return  <View>
 
 
 
- 
-
-                    {/* <Modal 
-                            onRequestClose={() => setVisible(false)}
-                            visible={visible}>
-                        
-                        <FlatList data={props.data}
-                                 renderItem={renderItem}>
-
-                        </FlatList>
-
-                    </Modal>  */}
-
+  
 
             
 

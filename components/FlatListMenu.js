@@ -5,7 +5,7 @@ import FullPost from "./FullPost";
 import FlatListItemStyle from "./FlatListItemStyle";
 
 
- function FlatListMenu ({menu, snacks}) {
+ function FlatListMenu ({menu, snacks, onPress}) {
         const [currentItem, setCurrentItem] = useState(0)
         const [isShown, setIsShown] = useState(false)
 
