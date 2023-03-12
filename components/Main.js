@@ -61,33 +61,50 @@ export default function Main () {
         }
 
 
+       useEffect(() => {
+        console.log('input')
+       }, [input])
 
-        const a = []
-        const searchItemRender = ({item, index}) => {
-              if(item.menu) {
+        
+        const itemRenderCallBack = useCallback((item, index) => {
+            console.log('working')
+            if(item.menu) {
                 item.menu.forEach(i => {
                     if(i.title.toLowerCase().includes(input.toLowerCase())) {
                         a.push( <FlatListItemStyle post={i}
-                                                   key={i.id + index * item.id}
+                                                   key={Math.random()}
                                                    onPress={() => fullPostHandler(i)}
                                                    /> )
-                         }})
-                        return a
-                        }
-                    }
+                                    }})
+                                         return a
+                                          }
+                                                 }, [input])
+
+
+
+        const a = []
+            const searchItemRender = ({item, index}) => {
+                        return  itemRenderCallBack(item, index)
+                }
           
+                console.log(a.length)
                                     
 
-                console.log(input)
                 
-                                
+        useEffect(() => {
+           const backAction = BackHandler.addEventListener('hardwareBackPress', () => {
+                                        setInput('')
+                                        return true
+                                    })
+                return () => backAction.remove()
+        }, [])
 
 
 
 
        
         const renderItem = ({item}) => {
-            return <View>
+             return <View>
                         {item.id === 1 && <Banner />  }
                         {item.id === 2 &&  <FlatList 
                                                 data={data}
@@ -105,8 +122,8 @@ export default function Main () {
                                                           onPress={(i) => fullPostHandler(i)}
                                                           snacks={snacks}/>
                                         </View>                       }
-                </View>
-        }
+                    </View>
+                    }
     
 
 
@@ -163,9 +180,8 @@ export default function Main () {
                                     renderItem={input ? searchItemRender : renderItem}
                                     stickyHeaderHiddenOnScroll={false}
                                     stickyHeaderIndices={[0, 2]}
-                                    ListHeaderComponent={ <Search data={burgerData}
-                                                                  /> }
-                                    initialNumToRender={7}
+                                    ListHeaderComponent={ <Search /> }
+                                    contentContainerStyle={{paddingBottom: 100}}
                                      >
                                     
                          </FlatList>
