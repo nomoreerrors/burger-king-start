@@ -34,70 +34,80 @@ export default function Main () {
 
 
 
+
+        
+
         const verticalScroll = (id) => {
                 verticalFlatListRef.current.scrollToIndex({index: id - 1,
                                                           viewOffset: 200 }) 
-            }
+                                                         }
 
 
   
+
+
+
         const renderHorizontalItem = ({item, index}) => {
+            // console.log('updated')
                 if(item.header)
                 return <MenuButtons 
                         verticalScroll={() => verticalScroll(item.id)}
-                        isActive={activeMenuButton[index - 2]}
-                        header={item.header}
-                        key={item.id}
-                        data={data}
-                        />   
-                    }
+                            isActive={activeMenuButton[index - 2]}
+                                 header={item.header}
+                                    key={item.id}
+                                         data={data}
+                                            />   
+                                                 }
 
 
 
 
         const fullPostHandler = (i) => {
-              setSelectedItem(i)
-              setIsShown(true)
-        }
+                     setSelectedItem(i)
+                             setIsShown(true)
+                                    }
 
 
-       useEffect(() => {
-        console.log('input')
-       }, [input])
+        
 
         
         const itemRenderCallBack = useCallback((item, index) => {
-            console.log('working')
-            if(item.menu) {
-                item.menu.forEach(i => {
-                    if(i.title.toLowerCase().includes(input.toLowerCase())) {
-                        a.push( <FlatListItemStyle post={i}
-                                                   key={Math.random()}
-                                                   onPress={() => fullPostHandler(i)}
-                                                   /> )
-                                    }})
-                                         return a
-                                          }
-                                                 }, [input])
+                if(item.menu) {
+                    item.menu.forEach(i => {
+                        if(i.title.toLowerCase().includes(input.toLowerCase())) {
+                            a.push( <FlatListItemStyle post={i}
+                                                       key={i.uid}
+                                                       onPress={() => fullPostHandler(i)}
+                                                      /> )
+                                        }})
+                                            return a
+                                            }
+                                                    }, [input])
+
+
 
 
 
         const a = []
             const searchItemRender = ({item, index}) => {
                         return  itemRenderCallBack(item, index)
-                }
+                             }
           
-                console.log(a.length)
                                     
 
                 
+
+
+
+
+
         useEffect(() => {
            const backAction = BackHandler.addEventListener('hardwareBackPress', () => {
-                                        setInput('')
-                                        return true
-                                    })
-                return () => backAction.remove()
-        }, [])
+                    setInput('')
+                            return true
+                                })
+                                return () => backAction.remove()
+                                        }, [])
 
 
 
@@ -128,21 +138,42 @@ export default function Main () {
 
 
 
+        const scrollMenuHandler = (number, viewableItem) => {
 
-    const onViewableItemsChanged = ({viewableItems}) => {
-        viewableItems.forEach(i => {
-            if(i.item.header) { 
                     horizontalFlatlistRef.current.scrollToIndex(
-                                            {index: i.item.id - 1,
-                                            animated: true,
-                                            viewPosition: 0.5 })
-                                
+                                {index: viewableItem.id - 1,
+                                animated: true,
+                                viewPosition: 0.5 })
 
-                            setActiveMenuButton(activeMenuButton => {
-                                return activeMenuButton.map((button, index) => {
-                                    return i.item.id - 3 === index? true : false
-                    })})
-        }})
+                    setActiveMenuButton(activeMenuButton => {
+                        return activeMenuButton.map((button, index) => {
+                            return viewableItem.id - 3 === index? true : false
+            })})
+                }
+
+
+
+
+    let c
+    const onViewableItemsChanged = ({viewableItems}) => {
+                if(viewableItems.length === 1 && 
+                         viewableItems[0].item.header && 
+                             viewableItems[0].item.header !== c) {
+                                    c = viewableItems[0].item.header
+                                    scrollMenuHandler(0, viewableItems[0].item)
+                    }
+
+                if(viewableItems.length > 1 && 
+                          viewableItems[1].item.header && 
+                                  viewableItems[1].item.header !== c) {
+                                    c = viewableItems[1].item.header
+                                    scrollMenuHandler(1, viewableItems[1].item)
+                    }
+
+                if(!viewableItems[0].item.header) {
+                                    scrollMenuHandler(0, viewableItems[0].item)
+                    }
+                    //осталось докрутить здесь
         }
 
     const viewabilityConfigCallbackPairs = useRef([{ onViewableItemsChanged }])
@@ -161,7 +192,6 @@ export default function Main () {
 
                         <Search>
                             <TextInput  onChangeText={value => setInput(value)}
-                                        // onFocus={() => setVisible(true)}
                                         value={input}
                                         style={styles.textInput}></TextInput>
                         </Search>
@@ -173,7 +203,7 @@ export default function Main () {
 
 
                         <FlatList   data={burgerData}
-                                    // viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current }
+                                    viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current }
                                     ref={verticalFlatListRef}
                                     style={{marginBottom: 50, zIndex: 0}}
                                     keyExtractor={item => item.id}
