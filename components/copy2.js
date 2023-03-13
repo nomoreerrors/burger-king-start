@@ -20,77 +20,77 @@ export default function Main () {
 
 
 
-        const [data, setData] = useState(() => burgerData)
-        const [snacks, setSnacks] = useState(SnacksData)
-        const [isShown, setIsShown] = useState(false)
-        const [input, setInput] = useState('')
-        const [selectedItem, setSelectedItem] = useState(0)
-        const [activeMenuButton, setActiveMenuButton] = useState(() => data.filter(i => i.header).map(
-                                                        i => i.isActive))
+        // const [data, setData] = useState(() => burgerData)
+        // const [snacks, setSnacks] = useState(SnacksData)
+        // const [isShown, setIsShown] = useState(false)
+        // const [input, setInput] = useState('')
+        // const [selectedItem, setSelectedItem] = useState(0)
+        // const [activeMenuButton, setActiveMenuButton] = useState(() => data.filter(i => i.header).map(
+        //                                                 i => i.isActive))
 
 
-        const horizontalFlatlistRef = useRef(null)
-        const verticalFlatListRef = useRef(null)
+        // const horizontalFlatlistRef = useRef(null)
+        // const verticalFlatListRef = useRef(null)
 
 
 
 
         
 
-        const verticalScroll = (id) => {
-                verticalFlatListRef.current.scrollToIndex({index: id - 1,
-                                                          viewOffset: 200 }) 
-                                                         }
+        // const verticalScroll = (id) => {
+        //         verticalFlatListRef.current.scrollToIndex({index: id - 1,
+        //                                                   viewOffset: 200 }) 
+        //                                                  }
 
 
   
 
 
 
-        const renderHorizontalItem = ({item, index}) => {
-                if(item.header)
-                return <MenuButtons 
-                        verticalScroll={() => verticalScroll(item.id)}
-                            isActive={activeMenuButton[index - 2]}
-                                 header={item.header}
-                                    key={item.id}
-                                         data={data}
-                                            />   
-                                                 }
+        // const renderHorizontalItem = ({item, index}) => {
+        //         if(item.header)
+        //         return <MenuButtons 
+        //                 verticalScroll={() => verticalScroll(item.id)}
+        //                     isActive={activeMenuButton[index - 2]}
+        //                          header={item.header}
+        //                             key={item.id}
+        //                                  data={data}
+        //                                     />   
+        //                                          }
 
 
 
 
-        const fullPostHandler = (i) => {
-                     setSelectedItem(i)
-                             setIsShown(true)
-                                    }
+        // const fullPostHandler = (i) => {
+        //              setSelectedItem(i)
+        //                      setIsShown(true)
+        //                             }
 
 
         
 
         
-        const itemRenderCallBack = useCallback((item, index) => {
-                if(item.menu) {
-                    item.menu.forEach(i => {
-                        if(i.title.toLowerCase().includes(input.toLowerCase())) {
-                            a.push( <FlatListItemStyle post={i}
-                                                       key={i.uid}
-                                                       onPress={() => fullPostHandler(i)}
-                                                      /> )
-                                        }})
-                                            return a
-                                            }
-                                                    }, [input])
+        // const itemRenderCallBack = useCallback((item, index) => {
+        //         if(item.menu) {
+        //             item.menu.forEach(i => {
+        //                 if(i.title.toLowerCase().includes(input.toLowerCase())) {
+        //                     a.push( <FlatListItemStyle post={i}
+        //                                                key={i.uid}
+        //                                                onPress={() => fullPostHandler(i)}
+        //                                               /> )
+        //                                 }})
+        //                                     return a
+        //                                     }
+        //                                             }, [input])
 
 
 
 
 
-        const a = []
-            const searchItemRender = ({item, index}) => {
-                        return  itemRenderCallBack(item, index)
-                             }
+        // const a = []
+        //     const searchItemRender = ({item, index}) => {
+        //                 return  itemRenderCallBack(item, index)
+        //                      }
           
                                     
 
@@ -113,7 +113,6 @@ export default function Main () {
 
        
         const renderItem = ({item}) => {
-            
              return <View>
                         {item.id === 1 && <Banner />  }
                         {item.id === 2 &&  <FlatList 
@@ -129,6 +128,7 @@ export default function Main () {
                                             {item.header}
                                             </Text>
                                             <FlatListMenu menu={item.menu}
+                                                          onPress={(i) => fullPostHandler(i)}
                                                           snacks={snacks}/>
                                         </View>                       }
                     </View>
@@ -153,8 +153,6 @@ export default function Main () {
 
 
 
-
-
         let c
         const onViewableItemsChanged = ({viewableItems}) => {
                     if(viewableItems.length === 1 && 
@@ -172,7 +170,8 @@ export default function Main () {
                         }
 
                     if(!viewableItems[0].item.header) {
-                                        scrollMenuHandler(3)   }
+                                        scrollMenuHandler(3)
+                        }
             }
 
         const viewabilityConfigCallbackPairs = useRef([{ onViewableItemsChanged }])

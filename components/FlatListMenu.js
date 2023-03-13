@@ -13,9 +13,12 @@ import FlatListItemStyle from "./FlatListItemStyle";
               setCurrentItem(i)
               setIsShown(true)
         }
+        useEffect(() => {
+            console.log('updated')
+        },[])
 
     const burgerList = menu.map(i => {
-        return  <FlatListItemStyle onPress={() => fullPostHandler(i)}
+        return  <FlatListItemStyle onPress={() => onPress(i)}
                                    post={i}
                                    snacks={snacks}
                                    key={i.id}
