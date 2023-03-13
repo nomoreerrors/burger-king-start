@@ -129,6 +129,8 @@ export default function Main () {
                                             {item.header}
                                             </Text>
                                             <FlatListMenu menu={item.menu}
+                                                          onPress={(i) => fullPostHandler(i)}
+                                                        //   isShown={isShown}
                                                           snacks={snacks}/>
                                         </View>                       }
                     </View>
@@ -138,7 +140,7 @@ export default function Main () {
 
 
         const scrollMenuHandler = (id) => {
-
+            
                     horizontalFlatlistRef.current.scrollToIndex(
                                 {index: id - 1,
                                 animated: true,
@@ -148,7 +150,7 @@ export default function Main () {
                         return activeMenuButton.map((button, index) => {
                             return id - 3 === index? true : false
             })})
-                }
+        }
 
 
 
