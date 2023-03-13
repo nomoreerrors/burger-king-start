@@ -138,45 +138,44 @@ export default function Main () {
 
 
 
-        const scrollMenuHandler = (number, viewableItem) => {
+        const scrollMenuHandler = (id) => {
 
                     horizontalFlatlistRef.current.scrollToIndex(
-                                {index: viewableItem.id - 1,
+                                {index: id - 1,
                                 animated: true,
                                 viewPosition: 0.5 })
 
                     setActiveMenuButton(activeMenuButton => {
                         return activeMenuButton.map((button, index) => {
-                            return viewableItem.id - 3 === index? true : false
+                            return id - 3 === index? true : false
             })})
                 }
 
 
 
 
-    let c
-    const onViewableItemsChanged = ({viewableItems}) => {
-                if(viewableItems.length === 1 && 
-                         viewableItems[0].item.header && 
-                             viewableItems[0].item.header !== c) {
-                                    c = viewableItems[0].item.header
-                                    scrollMenuHandler(0, viewableItems[0].item)
-                    }
+        let c
+        const onViewableItemsChanged = ({viewableItems}) => {
+                    if(viewableItems.length === 1 && 
+                            viewableItems[0].item.header && 
+                                viewableItems[0].item.header !== c) {
+                                        c = viewableItems[0].item.header
+                                        scrollMenuHandler(viewableItems[0].item.id)
+                        }
 
-                if(viewableItems.length > 1 && 
-                          viewableItems[1].item.header && 
-                                  viewableItems[1].item.header !== c) {
-                                    c = viewableItems[1].item.header
-                                    scrollMenuHandler(1, viewableItems[1].item)
-                    }
+                    if(viewableItems.length > 1 && 
+                            viewableItems[1].item.header && 
+                                    viewableItems[1].item.header !== c) {
+                                        c = viewableItems[1].item.header
+                                        scrollMenuHandler(viewableItems[1].item.id)
+                        }
 
-                if(!viewableItems[0].item.header) {
-                                    scrollMenuHandler(0, viewableItems[0].item)
-                    }
-                    //осталось докрутить здесь
-        }
+                    if(!viewableItems[0].item.header) {
+                                        scrollMenuHandler(3)
+                        }
+            }
 
-    const viewabilityConfigCallbackPairs = useRef([{ onViewableItemsChanged }])
+        const viewabilityConfigCallbackPairs = useRef([{ onViewableItemsChanged }])
 
       
 
