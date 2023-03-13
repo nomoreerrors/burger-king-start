@@ -48,7 +48,6 @@ export default function Main () {
 
 
         const renderHorizontalItem = ({item, index}) => {
-            // console.log('updated')
                 if(item.header)
                 return <MenuButtons 
                         verticalScroll={() => verticalScroll(item.id)}
