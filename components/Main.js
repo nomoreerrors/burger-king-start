@@ -9,7 +9,7 @@ import Banner from "./Banner"
 import Search from "./Search"
 import SnacksData from "./data/SnacksData"
 import Header from "./Header"
-import FlatListItemStyle from "./FlatListItemStyle"
+import SearchFlatList from "./SearchFlatList"
 import FullPost from "./FullPost"
 
 
@@ -76,31 +76,7 @@ export default function Main () {
                                              }
 
 
-                                   
-
-        
-        const itemRenderCallBack = useCallback((item) => {
-                if(item.title.toLowerCase().includes(input.toLowerCase()) ||
-                    item.info.toLowerCase().includes(input.toLowerCase())) {
-                            return <FlatListItemStyle  post={item}
-                                                    key={item.uid}
-                                                    onPress={() => fullPostHandler(item)}
-                                                /> 
-                                                }
-                                                }, [input])
-                                                    
-
-
-
-        const a = []
-            const searchItemRender = ({item}) => {
-                         return itemRenderCallBack(item)
-                                           } 
-          
-                                    
-
- 
-         
+      
 
 
 
@@ -110,7 +86,7 @@ export default function Main () {
         useEffect(() => {
            const backAction = BackHandler.addEventListener('hardwareBackPress', () => {
                     setInput('')
-                    if(flatListToggle )setFlatListToggle(false)
+                    if(flatListToggle)setFlatListToggle(false)
                     if(inputRef.current) inputRef.current.blur()
                             return true
                                 })
@@ -138,8 +114,8 @@ export default function Main () {
                                             {item.header}
                                             </Text>
                                             <FlatListMenu menu={item.menu}
-                                                          onPress={(i) => fullPostHandler(i)}
-                                                          snacks={snacks}/>
+                                                          onPress={fullPostHandler}
+                                                           />
                                         </View>                       }
                     </View>
                     }
@@ -193,7 +169,7 @@ export default function Main () {
         const viewabilityConfigCallbackPairs = useRef([{ onViewableItemsChanged }])
 
       
-
+          
 
 
 
@@ -232,19 +208,11 @@ export default function Main () {
                                  </FlatList>}
 
 
-             {flatListToggle &&
-                                <FlatList   data={input.split('').length > 1 ? searchItems : []}
-                                            style={{marginBottom: 50, zIndex: 0}}
-                                            keyExtractor={item => item.uid}
-                                            ListEmptyComponent={<View style={styles.emptyFlatlist}></View>}
-                                            renderItem={searchItemRender}
-                                            contentContainerStyle={{paddingBottom: 100}}
-                                            initialNumToRender={5}
-                                            >
-                                </FlatList> }
-
-
-
+             {flatListToggle && <SearchFlatList data={input.split('').length > 1 ? searchItems : []}
+                                                input={input}
+                                                onPress={fullPostHandler}
+                                                /> }
+                               
 
 
 
