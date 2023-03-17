@@ -1,12 +1,11 @@
 import { useRef, React, useEffect, useState, useCallback, } from "react"
-import { FlatList, View, Text, StyleSheet, TouchableOpacity, TextInput, StatusBar, Image, ScrollView, Button } from "react-native"
+import { FlatList, View, Text, StyleSheet, TextInput, StatusBar, Keyboard, BackHandler } from "react-native"
 import burgerData from "./data/data"
 import FlatListMenu from "./FlatListMenu"
 import colors from "./colors"
 import MenuButtons from "./MenuButtons"
 import Banner from "./Banner"
 import Search from "./Search"
-import { BackHandler } from "react-native"
 import SnacksData from "./data/SnacksData"
 import Header from "./Header"
 import FlatListItemStyle from "./FlatListItemStyle"
@@ -23,6 +22,7 @@ export default function Main () {
         const [data, setData] = useState(() => burgerData)
         const [snacks, setSnacks] = useState(SnacksData)
         const [isShown, setIsShown] = useState(false)
+        const [flatListToggle, setFlatListToggle] = useState(false)
         const [input, setInput] = useState('')
         const [selectedItem, setSelectedItem] = useState(0)
         const [activeMenuButton, setActiveMenuButton] = useState(() => data.filter(i => i.header).map(
@@ -31,7 +31,7 @@ export default function Main () {
 
         const horizontalFlatlistRef = useRef(null)
         const verticalFlatListRef = useRef(null)
-
+        const inputRef = useRef(null)
 
 
 
@@ -67,13 +67,14 @@ export default function Main () {
                                     }
 
 
-        
+                                   
 
         
         const itemRenderCallBack = useCallback((item, index) => {
                 if(item.menu) {
                     item.menu.forEach(i => {
-                        if(i.title.toLowerCase().includes(input.toLowerCase())) {
+                        if(input.split('').length > 1 && 
+                           i.title.toLowerCase().includes(input.toLowerCase())) {
                             a.push( <FlatListItemStyle post={i}
                                                        key={i.uid}
                                                        onPress={() => fullPostHandler(i)}
@@ -85,8 +86,6 @@ export default function Main () {
 
 
 
-
-
         const a = []
             const searchItemRender = ({item, index}) => {
                         return  itemRenderCallBack(item, index)
@@ -94,15 +93,21 @@ export default function Main () {
           
                                     
 
-                
+ 
 
 
 
 
 
+
+
+
+                             
         useEffect(() => {
            const backAction = BackHandler.addEventListener('hardwareBackPress', () => {
                     setInput('')
+                    if(flatListToggle )setFlatListToggle(false)
+                    if(inputRef.current) inputRef.current.blur()
                             return true
                                 })
                                 return () => backAction.remove()
@@ -130,17 +135,18 @@ export default function Main () {
                                             </Text>
                                             <FlatListMenu menu={item.menu}
                                                           onPress={(i) => fullPostHandler(i)}
-                                                        //   isShown={isShown}
                                                           snacks={snacks}/>
                                         </View>                       }
                     </View>
                     }
     
 
+                  
+
 
 
         const scrollMenuHandler = (id) => {
-            
+            if(!input) {
                     horizontalFlatlistRef.current.scrollToIndex(
                                 {index: id - 1,
                                 animated: true,
@@ -149,9 +155,7 @@ export default function Main () {
                     setActiveMenuButton(activeMenuButton => {
                         return activeMenuButton.map((button, index) => {
                             return id - 3 === index? true : false
-            })})
-        }
-
+                        })})}}
 
 
 
@@ -159,6 +163,7 @@ export default function Main () {
 
         let c
         const onViewableItemsChanged = ({viewableItems}) => {
+
                     if(viewableItems.length === 1 && 
                             viewableItems[0].item.header && 
                                 viewableItems[0].item.header !== c) {
@@ -173,8 +178,12 @@ export default function Main () {
                                         scrollMenuHandler(viewableItems[1].item.id)
                         }
 
-                    if(!viewableItems[0].item.header) {
-                                        scrollMenuHandler(3)   }
+                        if(!viewableItems.length ||
+                            !viewableItems[0].item.header &&
+                                        c !== '') {
+                                        c = ''
+                                        scrollMenuHandler(3)   
+                        }
             }
 
         const viewabilityConfigCallbackPairs = useRef([{ onViewableItemsChanged }])
@@ -187,35 +196,49 @@ export default function Main () {
 
     return (
             
-            <View style={{backgroundColor: colors.main}} >
-                        <StatusBar backgroundColor={colors.brown}/>
-                        <Header title={'Меню'} />
+                    <View style={{backgroundColor: colors.main}} >
+                        
+                                <StatusBar  backgroundColor={colors.brown}/>
+                                <Header     title={'Меню'} />
 
-                        <Search>
-                            <TextInput  onChangeText={value => setInput(value)}
-                                        value={input}
-                                        style={styles.textInput}></TextInput>
-                        </Search>
+                                <Search>
+                                <TextInput  onChangeText={value => setInput(value)}
+                                            onFocus={() => setFlatListToggle(true)}
+                                            value={input}
+                                            ref={(ref) => {inputRef.current = ref}}
+                                            style={styles.textInput}></TextInput>
+                                </Search>
 
-                        <FullPost   snacks={snacks}
-                                    isShown={isShown}
-                                    onClose={() => setIsShown(false)}
-                                    post={selectedItem}/>
+                                <FullPost   snacks={snacks}
+                                            isShown={isShown}
+                                            onClose={() => setIsShown(false)}
+                                            post={selectedItem}/>
 
 
-                        <FlatList   data={burgerData}
-                                    viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current }
-                                    ref={verticalFlatListRef}
-                                    style={{marginBottom: 50, zIndex: 0}}
-                                    keyExtractor={item => item.id}
-                                    renderItem={input ? searchItemRender : renderItem}
-                                    stickyHeaderHiddenOnScroll={false}
-                                    stickyHeaderIndices={[0, 2]}
-                                    ListHeaderComponent={ <Search /> }
-                                    contentContainerStyle={{paddingBottom: 100}}
-                                     >
-                                    
-                         </FlatList>
+              {!flatListToggle && <FlatList data={burgerData}
+                                            viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current }
+                                            ref={verticalFlatListRef}
+                                            style={{marginBottom: 50, zIndex: 0}}
+                                            keyExtractor={item => item.id}
+                                            renderItem={renderItem}
+                                            stickyHeaderHiddenOnScroll={false}
+                                            stickyHeaderIndices={[1]}
+                                            contentContainerStyle={{paddingBottom: 100}}
+                                            >
+                                 </FlatList>}
+
+
+             {flatListToggle &&  <FlatList  data={burgerData}
+                                            style={{marginBottom: 50, zIndex: 0}}
+                                            keyExtractor={item => item.id}
+                                            renderItem={searchItemRender}
+                                            contentContainerStyle={{paddingBottom: 100}}
+                                            >
+                                </FlatList> }
+
+
+
+
             </View>
 
 

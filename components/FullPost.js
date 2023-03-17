@@ -44,7 +44,7 @@ export default function FullPost ({post, onClose, isShown, snacks}) {
                                         }}>
 
                                     <TouchableOpacity activeOpacity={1}
-                                                    style={styles.wrapper}>
+                                                      style={styles.wrapper}>
                                                     
                                         <View style={styles.background}></View>
                                         <Image style={styles.image}
