@@ -1,5 +1,6 @@
 import { useRef, React, useEffect, useState, useCallback, } from "react"
-import { FlatList, View, Text, StyleSheet, TextInput, StatusBar, Keyboard, BackHandler } from "react-native"
+import { FlatList, View, Text, StyleSheet, TextInput, StatusBar, Dimensions, Keyboard, BackHandler,
+ActivityIndicator } from "react-native"
 import burgerData from "./data/data"
 import FlatListMenu from "./FlatListMenu"
 import colors from "./colors"
@@ -25,6 +26,14 @@ export default function Main () {
         const [flatListToggle, setFlatListToggle] = useState(false)
         const [input, setInput] = useState('')
         const [selectedItem, setSelectedItem] = useState(0)
+        const [searchItems, setSearchItems] = useState(() => {
+                                                const a =  burgerData.filter(i => i.menu)
+                                                const b = []
+                                                a.forEach(i => i.menu.forEach(item => b.push(item)))
+                                                return b
+        })
+                                                 
+                                                
         const [activeMenuButton, setActiveMenuButton] = useState(() => data.filter(i => i.header).map(
                                                         i => i.isActive))
 
@@ -44,7 +53,7 @@ export default function Main () {
 
 
   
-
+                                                         
 
 
         const renderHorizontalItem = ({item, index}) => {
@@ -63,40 +72,35 @@ export default function Main () {
 
         const fullPostHandler = (i) => {
                      setSelectedItem(i)
-                             setIsShown(true)
-                                    }
+                             setIsShown(true) 
+                                             }
 
 
                                    
 
         
-        const itemRenderCallBack = useCallback((item, index) => {
-                if(item.menu) {
-                    item.menu.forEach(i => {
-                        if(input.split('').length > 1 && 
-                           i.title.toLowerCase().includes(input.toLowerCase())) {
-                            a.push( <FlatListItemStyle post={i}
-                                                       key={i.uid}
-                                                       onPress={() => fullPostHandler(i)}
-                                                      /> )
-                                        }})
-                                            return a
-                                            }
-                                                    }, [input])
+        const itemRenderCallBack = useCallback((item) => {
+                if(item.title.toLowerCase().includes(input.toLowerCase()) ||
+                    item.info.toLowerCase().includes(input.toLowerCase())) {
+                            return <FlatListItemStyle  post={item}
+                                                    key={item.uid}
+                                                    onPress={() => fullPostHandler(item)}
+                                                /> 
+                                                }
+                                                }, [input])
+                                                    
 
 
 
         const a = []
-            const searchItemRender = ({item, index}) => {
-                        return  itemRenderCallBack(item, index)
-                             }
+            const searchItemRender = ({item}) => {
+                         return itemRenderCallBack(item)
+                                           } 
           
                                     
 
  
-
-
-
+         
 
 
 
@@ -228,13 +232,18 @@ export default function Main () {
                                  </FlatList>}
 
 
-             {flatListToggle &&  <FlatList  data={burgerData}
+             {flatListToggle &&
+                                <FlatList   data={input.split('').length > 1 ? searchItems : []}
                                             style={{marginBottom: 50, zIndex: 0}}
-                                            keyExtractor={item => item.id}
+                                            keyExtractor={item => item.uid}
+                                            ListEmptyComponent={<View style={styles.emptyFlatlist}></View>}
                                             renderItem={searchItemRender}
                                             contentContainerStyle={{paddingBottom: 100}}
+                                            initialNumToRender={5}
                                             >
                                 </FlatList> }
+
+
 
 
 
@@ -338,6 +347,13 @@ const styles = StyleSheet.create({
             
     
         },
+
+        emptyFlatlist: {
+            height: Dimensions.get('window').height,
+            width: Dimensions.get('screen').width,
+            backgroundColor: colors.black, 
+
+        }
         
 
 })
