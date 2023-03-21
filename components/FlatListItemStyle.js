@@ -1,15 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import colors from './colors'
 import { TouchableOpacity, View, Text, Image , StyleSheet} from 'react-native'
 import FullPost from './FullPost'
 
 
 
-export default function FlatListItemStyle({post, onPress}) {
+export default function FlatListItemStyle({post, snacks}) {
+
+    const [fullPost, setFullPost] = useState(false)
+    const fullPostHandler = () => setFullPost(fullPost => !fullPost)
+
+
   return (
          <>
             <TouchableOpacity  
-                            onPress={onPress}
+                            onPress={fullPostHandler}
                             style={styles.card}>
                             <Image style={styles.image} source={post.image}></Image>
                             <View >
@@ -20,6 +25,10 @@ export default function FlatListItemStyle({post, onPress}) {
                                 <Text style={styles.price}>{post.price}</Text>
                             </View>
                 </TouchableOpacity>
+
+                {fullPost && <FullPost post={post}
+                                       onClose={fullPostHandler}
+                                       snacks={snacks}/>}
 
                 
 

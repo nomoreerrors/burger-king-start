@@ -17,16 +17,21 @@ export default function FullPost ({post, onClose, isShown, snacks}) {
             setYandexMaps(!yandexMaps)
     }
 
+    
+
+
+
+
 
 
   
 
     return (
 
-        
+        <>
                                
                         
-            <Modal  propagateSwipe={true}
+           <Modal   propagateSwipe={true}
                     onRequestClose={() => {
                                 onClose()
                                 setShowNutrients(false)
@@ -53,21 +58,15 @@ export default function FullPost ({post, onClose, isShown, snacks}) {
                                         <Text style={styles.titleText}>{post.title}</Text>
                                         
 
-
-
-                                        {showSnacks &&
+                                        {showSnacks && 
                                         <FadeInAnimation height={600}>
-                                        <Snacks snacks={snacks}
-                                                post={post}/> 
+                                        <Snacks snacks={snacks}/> 
                                         </FadeInAnimation>  }
-
-
                                     
                                         {showNutrients && 
                                         <FadeInAnimation height={400}>
                                         <FullPostInfo post={post}/> 
-                                        </FadeInAnimation>
-                                        }
+                                        </FadeInAnimation>  }
                                     
 
                                     </TouchableOpacity>
@@ -78,15 +77,11 @@ export default function FullPost ({post, onClose, isShown, snacks}) {
                                                                  maps={yandexMapsToggle}/>
 
 
-                                        {yandexMaps && 
-                                        <Modal
-                                            animationType="fade"
-                                            onRequestClose={yandexMapsToggle}
-                                            visible={yandexMaps}>
-                                        <Map />
-                                        </Modal> }
-            </Modal> 
+                                  
+            </Modal>  
 
+                            {yandexMaps && <Map onClose={yandexMapsToggle}/> }
+        </>
 
             
 

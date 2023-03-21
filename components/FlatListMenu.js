@@ -8,36 +8,19 @@ import FlatListItemStyle from "./FlatListItemStyle";
 
 
 
- function FlatListMenu ({menu, snacks, onPress}) {
-        const [currentItem, setCurrentItem] = useState(0)
-        const [isShown, setIsShown] = useState(false)
-
-
-
-
-        // const fullPostHandler = (i) => {
-        //           setCurrentItem(i)
-        //                  setIsShown(true)
-        // }
-
-            
+ function FlatListMenu ({menu, snacks}) {
 
 
         const burgerList = useMemo(() => {
                 return  menu.map(i => {
-                        return  <FlatListItemStyle onPress={() => onPress(i)}
-                                                   post={i}
+                        return  <FlatListItemStyle post={i}
                                                    snacks={snacks}
                                                    key={i.id}/>
 
                                         })}, [])
 
-
-
     
     return (
-
-
         <View >
         {burgerList}
          
@@ -55,4 +38,4 @@ import FlatListItemStyle from "./FlatListItemStyle";
 
 
 
-export default memo(FlatListMenu)
+export default FlatListMenu

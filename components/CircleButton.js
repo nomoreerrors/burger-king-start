@@ -6,15 +6,23 @@ import colors from "./colors"
 
 export default function CircleButton (props) {
     
-
+    const setColor = props.isActive ? colors.main : colors.brown
+    const textColor = props.isActive ? colors.brown : colors.main
 
     return (
-        <TouchableOpacity  style={[styles.circleButton, {width: props.width,
+        <TouchableOpacity   onPress={props.onPress}
+                            style={[styles.circleButton, {width: props.width,
+                                                         height: props.height,
+                                                         borderRadius: props.radius,
+                                                         margin: props.margin,
+                                                         backgroundColor: props.type ? props.color : setColor,
                                                          flex: props.flex}]}>
 
         <Text style={{ fontSize: props.fontSize,
-                color: colors.main,
-                fontWeight: 700, }}>{props.title}</Text>
+                        color: props.type ? colors.main : textColor,
+                        fontWeight: 700, }}>{props.title}</Text>
+
+                      
 
         </TouchableOpacity>
     )
@@ -24,9 +32,6 @@ export default function CircleButton (props) {
 
 const styles = StyleSheet.create({
     circleButton: {
-        height: 50,
-        borderRadius: 30,
-        backgroundColor: colors.brown,
         justifyContent: 'center',
         alignItems: 'center',
     },

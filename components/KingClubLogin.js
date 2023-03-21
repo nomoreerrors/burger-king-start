@@ -23,6 +23,8 @@ export default function KingClubLogin (props) {
                                     </Text>
                             <CircleButton title={'Войти'}
                                     flex={1}
+                                    radius={50}
+                                    height={60}
                                     fontSize={20}/>
                     </View>
             </View>
