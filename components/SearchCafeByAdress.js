@@ -3,8 +3,6 @@ import { TextInput, StyleSheet,View, BackHandler } from 'react-native'
 import FilterRestaurantButton from './FilterRestaurantButton'
 import Search from './Search'
 import colors from './colors'
-import SearchAdressFlatList from './SearchAdressFlatList'
-import FilterRestaurantCard from './FilterRestaurantCard'
 import AnimatedFlatList from './AnimatedFlatList'
  
 

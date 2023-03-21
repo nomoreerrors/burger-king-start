@@ -6,9 +6,11 @@ import FullPostInfo from "./FullPostInfo";
 import RedButtonRestaurantInfo from "./RedButtonRestaurantInfo";
 import Map from "./Map";
 import FadeInAnimation from "./FadeInAnimation";
+import SnacksData from "./data/SnacksData";
 
 
-export default function FullPost ({post, onClose, isShown, snacks}) {
+
+export default function FullPost ({post, onClose, isShown}) {
     
     const [yandexMaps, setYandexMaps] = useState(false)
     const [showNutrients, setShowNutrients] = useState(false)
@@ -60,7 +62,7 @@ export default function FullPost ({post, onClose, isShown, snacks}) {
 
                                         {showSnacks && 
                                         <FadeInAnimation height={600}>
-                                        <Snacks snacks={snacks}/> 
+                                        <Snacks snacks={SnacksData}/> 
                                         </FadeInAnimation>  }
                                     
                                         {showNutrients && 
