@@ -2,13 +2,19 @@ import React, { useState } from 'react'
 import colors from './colors'
 import { TouchableOpacity, View, Text, Image , StyleSheet} from 'react-native'
 import FullPost from './FullPost'
+import RedButtonRestaurantInfo from './RedButtonRestaurantInfo'
+import Map from './Map'
 
 
 
 export default function FlatListItemStyle({post, snacks}) {
 
     const [fullPost, setFullPost] = useState(false)
+    const [yandexMaps, setYandexMaps] = useState(false)
     const fullPostHandler = () => setFullPost(fullPost => !fullPost)
+    const yandexMapsToggle = () =>  setYandexMaps(!yandexMaps)
+                 
+
 
 
   return (
@@ -26,9 +32,23 @@ export default function FlatListItemStyle({post, snacks}) {
                             </View>
                 </TouchableOpacity>
 
+
+
                 {fullPost && <FullPost post={post}
                                        onClose={fullPostHandler}
-                                       snacks={snacks}/>}
+                                       snacks={snacks}>
+
+                                <RedButtonRestaurantInfo title={'Выбрать ресторан'}
+                                                        post={post}
+                                                        maps={yandexMapsToggle}/>
+
+                                {yandexMaps &&
+                                <Map onClose={yandexMapsToggle}/> }
+                                    
+                            </FullPost>
+                                       
+                                       
+                                       }
 
                 
 

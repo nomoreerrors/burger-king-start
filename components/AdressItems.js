@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Image, Modal} from "react-native";
 import colors from "./colors";
+import { useStateContext } from "./ContextProvider/ContextProvider";
 
 
 
@@ -9,12 +10,17 @@ import colors from "./colors";
 
 export default function AdressItems(props) {
         const [isShown, setIsShown] = useState(false)
+
+
         const date = new Date()
         const hours = Number(date.getHours())
         const openHours = Number(props.item.open.split(':')[0])
         const value = useRef(new Animated.Value(0)).current
+        const {selectedRestaurant, setSelectedRestaurant} = useStateContext()
 
 
+
+        const setRestaurant = () => setSelectedRestaurant(props.item)
         const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
 
 
@@ -56,6 +62,7 @@ export default function AdressItems(props) {
 
              <AnimatedTouchable
                     activeOpacity={1}
+                    onPress={setRestaurant}
                     style={[styles.container, {height: value,
                                                borderBottomWidth: isShown ? 2 : 0}]}>
                    

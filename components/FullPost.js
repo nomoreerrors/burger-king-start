@@ -10,19 +10,15 @@ import SnacksData from "./data/SnacksData";
 
 
 
-export default function FullPost ({post, onClose, isShown}) {
+
+export default function FullPost ({post, onClose, isShown, children}) {
     
-    const [yandexMaps, setYandexMaps] = useState(false)
+   
     const [showNutrients, setShowNutrients] = useState(false)
     const [showSnacks, setShowShacks] = useState(false)
-    const yandexMapsToggle = () => {
-            setYandexMaps(!yandexMaps)
-    }
-
     
 
-
-
+    
 
 
 
@@ -30,9 +26,9 @@ export default function FullPost ({post, onClose, isShown}) {
 
     return (
 
-        <>
+
                                
-                        
+        
            <Modal   propagateSwipe={true}
                     onRequestClose={() => {
                                 onClose()
@@ -59,7 +55,7 @@ export default function FullPost ({post, onClose, isShown}) {
                                         </Image>
                                         <Text style={styles.titleText}>{post.title}</Text>
                                         
-
+                                        
                                         {showSnacks && 
                                         <FadeInAnimation height={600}>
                                         <Snacks snacks={SnacksData}/> 
@@ -70,20 +66,18 @@ export default function FullPost ({post, onClose, isShown}) {
                                         <FullPostInfo post={post}/> 
                                         </FadeInAnimation>  }
                                     
-
+                                        
                                     </TouchableOpacity>
+                                   
+                                    
                         </ScrollView>
 
-                                        <RedButtonRestaurantInfo title={'Выбрать ресторан'}
-                                                                 post={post}
-                                                                 maps={yandexMapsToggle}/>
-
-
+                        {children}
                                   
             </Modal>  
 
-                            {yandexMaps && <Map onClose={yandexMapsToggle}/> }
-        </>
+                            
+
 
             
 

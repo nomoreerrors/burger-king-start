@@ -13,10 +13,6 @@ import FlatListMenu from './FlatListMenu'
 export default function MainFlatList(props) {
 
 
-
-
-        const [isShown, setIsShown] = useState(false)
-        const [selectedItem, setSelectedItem] = useState(0)
         const [activeMenuButton, setActiveMenuButton] = useState(() => props.data.filter(i => i.header).map(
                                                         i => i.isActive))
 
@@ -49,12 +45,7 @@ export default function MainFlatList(props) {
                                                  }
 
 
-
-
-        const fullPostHandler = (i) => {
-                     setSelectedItem(i)
-                             setIsShown(true) 
-                                             }
+ 
 
 
         const renderItem = ({item}) => {
@@ -74,7 +65,7 @@ export default function MainFlatList(props) {
                                         {item.header}
                                         </Text>
                                         <FlatListMenu menu={item.menu}
-                                                        onPress={fullPostHandler}
+
                                                         />
                                     </View>                       }
                 </View>
@@ -155,6 +146,7 @@ export default function MainFlatList(props) {
                                 stickyHeaderIndices={[1]}
                                 contentContainerStyle={{paddingBottom: 100}}
                                 >
+                                    
                         </FlatList>
     )
 }

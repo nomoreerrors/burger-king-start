@@ -1,6 +1,7 @@
-import { useRef, React, useEffect, useState, useCallback, } from "react"
-import { FlatList, View, Text, StyleSheet, TextInput, StatusBar, Dimensions, Keyboard, BackHandler,
-ActivityIndicator } from "react-native"
+import { useRef, React, useEffect, useState, useCallback, useReducer, } from "react"
+import { FlatList, View, Text, StyleSheet, TextInput, StatusBar, BackHandler,
+ActivityIndicator, 
+TouchableOpacity} from "react-native"
 import burgerData from "./data/data"
 import colors from "./colors"
 import Search from "./Search"
@@ -8,6 +9,9 @@ import SnacksData from "./data/SnacksData"
 import Header from "./Header"
 import SearchFlatList from "./SearchFlatList"
 import MainFlatList from "./MainFlatList"
+import FullPost from "./FullPost"
+import { useStateContext } from "./ContextProvider/ContextProvider"
+
 
 
 
@@ -20,20 +24,24 @@ export default function Main () {
         const [data, setData] = useState(() => burgerData)
         const [snacks, setSnacks] = useState(() => SnacksData)
         const [flatListToggle, setFlatListToggle] = useState(false)
+        const [fullPost, setFullPost] = useState(false)
+        const [yandexMaps, setYandexMaps] = useState(false)
         const [input, setInput] = useState('')
+        const {user, setUser} = useStateContext()
         const [searchItems, setSearchItems] = useState(() => {
                                                 const a =  burgerData.filter(i => i.menu)
                                                 const b = []
                                                 a.forEach(i => i.menu.forEach(item => b.push(item)))
                                                 return b
         })
-                                                 
+        
+        
+        const fullPostHandler = () => setFullPost(fullPost => !fullPost)
+        const yandexMapsToggle = () =>  setYandexMaps(!yandexMaps)
                                                 
         const inputRef = useRef(null)
 
-
-
-
+       
 
 
 
@@ -52,14 +60,14 @@ export default function Main () {
 
 
  
+
  
-        
 
 
     return (
             
                 <View style={{backgroundColor: colors.main}} >
-                        
+ 
                                 <StatusBar  backgroundColor={colors.brown}/>
                                 <Header     title={'Меню'} />
 
@@ -83,7 +91,19 @@ export default function Main () {
                                                            snacks={snacks}
                                                             /> }
                                
+                        {fullPost && <FullPost  post={post}
+                                                onClose={fullPostHandler}
+                                                snacks={snacks}>
 
+                                        <RedButtonRestaurantInfo title={'Выбрать ресторан'}
+                                                                post={post}
+                                                                maps={yandexMapsToggle}/>
+
+                                        {yandexMaps &&
+                                        <Map onClose={yandexMapsToggle}/> }
+                                        
+                                    </FullPost>
+                                        }
 
 
                 </View>

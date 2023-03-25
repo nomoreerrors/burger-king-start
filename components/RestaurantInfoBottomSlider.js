@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { View, Text, StyleSheet, Modal, Image } from "react-native";
 import { Dimensions } from "react-native";
 import colors from "./colors";
 import Icons from "./Icons";
 import CircleButton from "./CircleButton";
 import AnimatedSlider from "./AnimatedSlider";
-import CloseButton from "./CloseButton";
+import reducer from "./reducer";
+import initialState from './reducer'
 
 
 
@@ -16,10 +17,10 @@ import CloseButton from "./CloseButton";
 export default function RestaurantInfoBottomSlider (props) {
 
     const [workingHours, setWorkingHours] = useState(null)
-
+    const [state, dispatch] = useReducer(reducer, initialState)
    
-    
 
+    //как пробрасывать состояние наверх? redux?
     
 
 
@@ -63,7 +64,11 @@ export default function RestaurantInfoBottomSlider (props) {
                                             </View>
                                     </View>
                                     <CircleButton width={Dimensions.get('screen').width / 2.5}
+                                                onPress={() => dispatch({type: 'shown'})}
                                                 fontSize={15}
+                                                flex={0.6}
+                                                height={50}
+                                                radius={30}
                                                 title={'Заказать здесь'}/>
                             </View>
 

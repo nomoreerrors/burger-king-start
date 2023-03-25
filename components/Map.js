@@ -7,6 +7,7 @@ import RestaurantInfoBottomSlider from "./RestaurantInfoBottomSlider";
 import FilterRestaurantCard from "./FilterRestaurantCard";
 import colors from "./colors";
 import SearchCafeByAdress from "./SearchCafeByAdress";
+import { useStateContext } from "./ContextProvider/ContextProvider";
 
 
 
@@ -20,6 +21,7 @@ import SearchCafeByAdress from "./SearchCafeByAdress";
     const [showMarkers, setShowMarkers] = useState(false)
     const [showSearchItems, setShowSearchItems] = useState(false)
     const [visible, setVisible] = useState(false)
+    const {selectedRestaurant, setSelectedRestaurant} = useStateContext()
     const [coordinates, setCoordinates] = useState({
                     lat: 55.75399399999374,
                     lon: 37.62209300000001,
@@ -28,8 +30,10 @@ import SearchCafeByAdress from "./SearchCafeByAdress";
 
                   
     const dimensions = Dimensions.get('screen')
+    
 
 
+  
 
 
     const filterHandler = () => setVisible(visible => !visible)
@@ -41,6 +45,17 @@ import SearchCafeByAdress from "./SearchCafeByAdress";
       if(bottomSliderToggle && !showSearchItems) setBottomSliderToggle(false)
       if(!showSearchItems && !bottomSliderToggle && !visible) props.onClose()
    }
+
+
+
+
+
+
+
+   useEffect(() => {
+    if(selectedRestaurant)
+       scaleToObjectCoordinates(selectedRestaurant)
+            }, [selectedRestaurant])
 
 
 
@@ -60,8 +75,14 @@ import SearchCafeByAdress from "./SearchCafeByAdress";
           setCoordinates({...object.coordinates, zoom: 14})
              setBottomSliderToggle(true)
                 setBottomSliderInfo(object)
+                 if(showSearchItems) setShowSearchItems(false)
+
              
     }
+
+   
+
+
     
 
 
@@ -85,7 +106,7 @@ import SearchCafeByAdress from "./SearchCafeByAdress";
     const markerArray = useMemo(() => {
           return cafeData.map((i, index) => {
                       return  <Marker point={i.coordinates}
-                                      onPress={() => scaleToObjectCoordinates(i)}
+                                      onPress={() => setSelectedRestaurant(i)}
                                       source={require('./img/logo/map-marker.png')}
                                       key={index.toString()}
                                       scale={scale}
@@ -122,6 +143,7 @@ import SearchCafeByAdress from "./SearchCafeByAdress";
                                   
 
         <RestaurantInfoBottomSlider info={bottomSliderInfo}
+                                    onPress={props.delivery}
                                     onClose={() => setBottomSliderToggle(false)}
                                     isShown={bottomSliderToggle}
                                     />

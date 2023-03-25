@@ -28,7 +28,7 @@ export default function SearchCafeByAdress(props) {
 
                    
 
-                    //флэтлист не крутится
+
 
 
 

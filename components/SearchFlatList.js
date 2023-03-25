@@ -15,7 +15,7 @@ export default function SearchFlatList(props) {
             
             if(item.title.toLowerCase().includes(props.input.toLowerCase()) ||
                 item.info.toLowerCase().includes(props.input.toLowerCase())) {
-                    console.log('updated')
+                    
                         return <FlatListItemStyle  post={item}
                                                    key={item.uid}
                                                    onPress={() => props.onPress(item)}

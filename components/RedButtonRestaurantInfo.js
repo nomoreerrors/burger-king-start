@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     redButtonWrapper: {
         width: Dimensions.get('screen').width / 0.2,
         height: 100,
+        zIndex: 3,
         position: 'absolute',
         top: Dimensions.get('screen').height - 150,
         backgroundColor: colors.main,

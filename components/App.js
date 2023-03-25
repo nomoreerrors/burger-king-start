@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text,View,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
+import ContextProvider from './ContextProvider/ContextProvider';
 import Main from './Main';
-import Map from './Map';
+
 
 
 
@@ -12,13 +12,12 @@ import Map from './Map';
 function App () {
 
 
- 
-
-
 
   return (
+    <ContextProvider>
       <Main />
-      // <Map />
+    </ContextProvider>
+
   )
   
 }

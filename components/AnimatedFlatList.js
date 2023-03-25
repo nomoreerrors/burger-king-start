@@ -11,35 +11,40 @@ export default function AnimatedFlatList(props) {
     const [numberOfItems, setNumberOfItems] = useState(10)
 
 
+
     useEffect(() => {
         let c = []
             setMatchedItems(() => {
-                        props.data.forEach(item => {
+                        props.data.forEach(item  => {
                             if(c.length < numberOfItems) {
                             c.push( <AdressItems    item={item}
                                                     input={props.input}
                                                     key={item.coordinates.lon}/>
                                                 )}
                                                 })
-                                                console.log(c.length)
+                                                
                                                 return c
                                                 })
-                                         }, [props.input])
+                                         }, [props.input, numberOfItems])
 
     
-                                    //делаем плавную догрузку элементов
 
-   
+
+
 
 
 
     return (
-        
-        <ScrollView style={{height: Dimensions.get('window').height}}>
+
+        <ScrollView style={{height: Dimensions.get('window').height - 100 }}
+                    onScroll={event => {
+                        if(event.nativeEvent.contentOffset.y > 100) setNumberOfItems(20)
+                    }}>
 
             {matchedItems}
 
         </ScrollView>
+
         
     )
 }
